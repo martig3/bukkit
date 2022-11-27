@@ -1,5 +1,6 @@
 export type FileInfo = {
   name: string,
-  size: number,
+  isDirectory: boolean,
+  size?: number,
   createdAt: Date,
 }
