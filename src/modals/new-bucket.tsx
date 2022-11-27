@@ -1,10 +1,10 @@
 import { Button, Modal, TextInput } from '@mantine/core';
 import { useState } from 'react';
+import { useDebouncedState } from '@mantine/hooks';
 
 function NewBucket(props: { opened: boolean, close: any }) {
-  const [error, setError] = useState('');
-  const [nameField, setNameField] = useState('');
-  const lengthError = "Name must be longer than 5 characters";
+  const [name, setName] = useState('');
+  const [nameDebounced, setNameDebounced] = useDebouncedState('', 500);
   return (
     <div>
       <Modal
@@ -17,25 +17,39 @@ function NewBucket(props: { opened: boolean, close: any }) {
           placeholder="New bucket"
           label="Name"
           mb={16}
-          error={error}
-          value={nameField}
-          onChange={(e) => setNameField(e.target.value)}
+          error={errorText(nameDebounced)}
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            setNameDebounced(e.target.value);
+          }}
         />
-        <Button onClick={() => {
-          if (!isValid(nameField)) {
-            setError(lengthError)
-          } else {
-            setNameField('');
-            props.close();
-          }
-        }}>Add</Button>
+        <Button
+          disabled={!maxLength(name)}
+          onClick={() => {
+            const error = errorText(name);
+            if (error) {
+            } else {
+              setName('');
+              setNameDebounced('');
+              props.close();
+            }
+          }}>Add</Button>
       </Modal>
     </div>
   )
 }
 
-function isValid(input: string) {
-  return input.length > 5;
+function errorText(input: string): string | null {
+  const lengthError = "Name must be longer than 5 characters";
+  if (!maxLength(input)) {
+    return lengthError;
+  }
+  return null;
+}
+
+function maxLength(input: string) {
+  return input.length >= 5;
 }
 
 export default NewBucket
