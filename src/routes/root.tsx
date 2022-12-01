@@ -12,14 +12,17 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { MoonStars, Search, Sun } from 'tabler-icons-react';
-import FileList from './file-list/file-list';
-import Sidenav from './sidenav';
+import Sidenav from '../appshell/sidenav';
 import { useState } from 'react';
+import { Outlet, useLoaderData } from 'react-router-dom';
+import { config } from '../utils/config';
 
-function MainView() {
+
+function Root() {
   const theme = useMantineTheme();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const [opened, setOpened] = useState(false);
+  const { buckets } = useLoaderData() as { buckets: string[] };
   return (
     <AppShell
       styles={{
@@ -28,7 +31,7 @@ function MainView() {
         },
       }}
       navbar={
-        <Sidenav opened={opened}/>
+        <Sidenav opened={opened} buckets={buckets}/>
       }
       header={
         <Header height={70} p="md">
@@ -64,9 +67,15 @@ function MainView() {
         </Header>
       }
     >
-      <FileList/>
+      <Outlet/>
     </AppShell>
   )
 }
 
-export default MainView;
+export default Root;
+
+export async function loader() {
+  const resp = await fetch(`${config().baseURL}/buckets`);
+  const buckets = await resp.json();
+  return { buckets }
+}

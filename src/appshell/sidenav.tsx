@@ -2,10 +2,10 @@ import { ActionIcon, Avatar, Box, Group, Navbar, Text, UnstyledButton, useMantin
 import { ChevronLeft, ChevronRight, CirclePlus, FileDatabase } from 'tabler-icons-react';
 import NewBucket from '../modals/new-bucket';
 import { useDisclosure } from '@mantine/hooks';
+import { Link } from 'react-router-dom';
 
-function Sidenav(props: { opened: boolean }) {
+function Sidenav(props: { opened: boolean, buckets: string[] }) {
   const theme = useMantineTheme();
-  const buckets = [{ name: 'test dir' }, { name: 'new dir' }];
   const [opened, { close, open }] = useDisclosure(false);
 
   return (
@@ -20,20 +20,22 @@ function Sidenav(props: { opened: boolean }) {
             }`,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Group spacing={2} position={'center'}>
+            <FileDatabase/>
             Buckets
-            <span style={{flex: '1 1 auto'}}></span>
+            <span style={{ flex: '1 1 auto' }}></span>
 
             <ActionIcon radius="xl" size={26} variant={'transparent'}>
               <CirclePlus onClick={open}/>
             </ActionIcon>
             <NewBucket opened={opened} close={close}></NewBucket>
-          </div>
+          </Group>
         </Box>
       </Navbar.Section>
       <Navbar.Section grow mt="xs">
-        {buckets.map(f =>
+        {props.buckets.map(bucket =>
           <UnstyledButton
+            key={bucket}
             sx={(theme) => ({
               display: 'block',
               width: '100%',
@@ -47,10 +49,11 @@ function Sidenav(props: { opened: boolean }) {
               },
             })}
           >
-            <Group>
-              <FileDatabase/>
-              <Text size="sm">{f.name}</Text>
-            </Group>
+            <Link to={`/buckets/${bucket}`}>
+              <Group>
+                <Text>{bucket}</Text>
+              </Group>
+            </Link>
           </UnstyledButton>
         )}
       </Navbar.Section>

@@ -42,6 +42,9 @@ function NewBucket(props: { opened: boolean, close: any }) {
 
 function errorText(input: string): string | null {
   const lengthError = "Name must be longer than 5 characters";
+  if (input.length === 0) {
+    return null;
+  }
   if (!maxLength(input)) {
     return lengthError;
   }

@@ -1,14 +1,14 @@
 import { ActionIcon, Group, Table, Text, UnstyledButton } from '@mantine/core';
-import { FileInfo } from '../model/file-info';
 import { Download, Folder, LineDashed } from 'tabler-icons-react';
 import { formatFileSize } from '../../utils/file-size';
+import { useLoaderData } from 'react-router-dom';
+import { FileInfo } from '../../model/file-info';
+import { config } from '../../utils/config';
 
-function FileList() {
-  const files: FileInfo[] = [
-    { name: 'folder', isDirectory: true, size: undefined, createdAt: new Date() },
-    { name: 'archive.zip', isDirectory: false, size: 1_000_000, createdAt: new Date() },
-    { name: 'file.png', isDirectory: false, size: 2_000_000, createdAt: new Date() },
-  ]
+
+function Files() {
+  const { files } = useLoaderData() as { files: FileInfo[] };
+  console.log(files);
   const rows = files.map((file) => (
     <tr key={file.name}>
       <td>
@@ -32,10 +32,10 @@ function FileList() {
               <Text size="sm">{file.name}</Text>
             </Group>
           </UnstyledButton>
-          : <Text sx={(theme) => ({padding: theme.spacing.xs})}>{file.name}</Text>}
+          : <Text sx={(theme) => ({ padding: theme.spacing.xs })}>{file.name}</Text>}
       </td>
       <td>{file.size ? formatFileSize(file.size) : <LineDashed/>}</td>
-      <td>{file.createdAt.toLocaleDateString()}</td>
+      <td>{file.modifiedAt.toLocaleDateString()}</td>
       <td>
         <ActionIcon radius="xl" size={26} variant={'filled'}>
           <Download size={18}/>
@@ -59,4 +59,12 @@ function FileList() {
   );
 }
 
-export default FileList
+export default Files
+
+// @ts-ignore
+export async function loader({ params }): Promise<{ files: FileInfo[] }> {
+  const bucket_name = params.bucket;
+  const resp = await fetch(`${config().baseURL}/buckets/${bucket_name}`);
+  const files = await resp.json();
+  return { files }
+}
