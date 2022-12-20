@@ -17,7 +17,7 @@ function App() {
       loader: rootLoader,
       children: [
         {
-          path: "buckets/:bucket",
+          path: 'buckets/:bucket/*',
           element: <Files/>,
           loader: filesLoader,
         },

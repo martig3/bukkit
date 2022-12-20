@@ -1,12 +1,13 @@
-import { ActionIcon, Avatar, Box, Group, Navbar, Text, UnstyledButton, useMantineTheme } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Group, Navbar, NavLink, Text, UnstyledButton, useMantineTheme } from '@mantine/core';
 import { ChevronLeft, ChevronRight, CirclePlus, FileDatabase } from 'tabler-icons-react';
 import NewBucket from '../modals/new-bucket';
 import { useDisclosure } from '@mantine/hooks';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function Sidenav(props: { opened: boolean, buckets: string[] }) {
   const theme = useMantineTheme();
   const [opened, { close, open }] = useDisclosure(false);
+  const { bucket } = useParams();
 
   return (
     <Navbar p="md" hiddenBreakpoint="sm" hidden={!props.opened} width={{ sm: 300 }}>
@@ -33,28 +34,18 @@ function Sidenav(props: { opened: boolean, buckets: string[] }) {
         </Box>
       </Navbar.Section>
       <Navbar.Section grow mt="xs">
-        {props.buckets.map(bucket =>
-          <UnstyledButton
-            key={bucket}
-            sx={(theme) => ({
-              display: 'block',
-              width: '100%',
-              padding: theme.spacing.xs,
-              borderRadius: theme.radius.sm,
-              color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-              '&:hover': {
-                backgroundColor:
-                  theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-              },
-            })}
-          >
-            <Link to={`/buckets/${bucket}`}>
-              <Group>
-                <Text>{bucket}</Text>
-              </Group>
-            </Link>
-          </UnstyledButton>
+        {props.buckets.map(b =>
+          <Link
+            key={b}
+            to={`/buckets/${b}`}>
+            <NavLink
+              label={b}
+              variant={'filled'}
+              mb={8}
+              active={bucket === b}
+            >
+            </NavLink>
+          </Link>
         )}
       </Navbar.Section>
       <Navbar.Section>

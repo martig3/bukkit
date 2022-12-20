@@ -1,7 +1,10 @@
 import {
   ActionIcon,
+  Anchor,
   AppShell,
+  Breadcrumbs,
   Burger,
+  Button, Flex,
   Grid,
   Group,
   Header,
@@ -11,18 +14,35 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { MoonStars, Search, Sun } from 'tabler-icons-react';
+import { CirclePlus, MoonStars, Search, Sun } from 'tabler-icons-react';
 import Sidenav from '../appshell/sidenav';
-import { useState } from 'react';
-import { Outlet, useLoaderData } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import { config } from '../utils/config';
+import UploadFiles from '../modals/upload-files';
+import { useDisclosure } from '@mantine/hooks';
 
 
 function Root() {
   const theme = useMantineTheme();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const [opened, setOpened] = useState(false);
+  const [sidenavOpened, setSidenavOpened] = useState(false);
+  const [uploadOpened, { close, open }] = useDisclosure(false);
   const { buckets } = useLoaderData() as { buckets: string[] };
+  const location = useLocation();
+  const genBreadCrumbElements = (location: any) => {
+    const paths: string[] = location.pathname.split('/').slice(2)
+    return paths.map((item, index, array) => (
+        <Anchor href={'/buckets/' + array.slice(0, index + 1).join('/')} key={index}>
+          {item}
+        </Anchor>
+    ));
+  }
+  const [breadcrumbs, setBreadcrumbs] = useState(genBreadCrumbElements(location));
+  useEffect(() =>
+    setBreadcrumbs(genBreadCrumbElements(location)), [location]
+  );
+
   return (
     <AppShell
       styles={{
@@ -31,7 +51,7 @@ function Root() {
         },
       }}
       navbar={
-        <Sidenav opened={opened} buckets={buckets}/>
+        <Sidenav opened={sidenavOpened} buckets={buckets}/>
       }
       header={
         <Header height={70} p="md">
@@ -40,8 +60,8 @@ function Root() {
               <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
                 <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
                   <Burger
-                    opened={opened}
-                    onClick={() => setOpened((o) => !o)}
+                    opened={sidenavOpened}
+                    onClick={() => setSidenavOpened((o) => !o)}
                     size="sm"
                     color={theme.colors.gray[6]}
                     mr="xl"
@@ -67,6 +87,16 @@ function Root() {
         </Header>
       }
     >
+      <UploadFiles opened={uploadOpened} close={close}/>
+      <Group position={'apart'}>
+        <Flex direction={'row'} gap={8} align={'center'}>
+          <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
+          <ActionIcon>
+            <CirclePlus size={22}></CirclePlus>
+          </ActionIcon>
+        </Flex>
+        {breadcrumbs.length > 0 ? <Button onClick={open}>Upload</Button> : <span/>}
+      </Group>
       <Outlet/>
     </AppShell>
   )
