@@ -9,7 +9,6 @@ import { useDisclosure } from '@mantine/hooks';
 
 function UploadFiles() {
   const theme = useMantineTheme();
-  const location = useLocation();
   const [paths] = useState(location.pathname.split('/').slice(2));
   const [uploads, setUploads] = useState<FileWithPath[]>([]);
   const [progress, setProgress] = useState<number>(0);
@@ -47,7 +46,10 @@ function UploadFiles() {
       <Modal
         opened={uploadOpened}
         centered
-        onClose={close}
+        onClose={() => {
+          close();
+          location.reload();
+        }}
         title="Upload Files"
       >
         <Dropzone
