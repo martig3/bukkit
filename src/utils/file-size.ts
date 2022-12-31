@@ -1,5 +1,10 @@
 function formatFileSize(size: number) {
-  return (size / 1_000_000).toFixed(2) + ' MB';
+  const GB = 1024 * 1024 * 1024;
+  if (size > GB) {
+    return (size / GB).toFixed(2) + ' GB';
+  }
+  const MB = 1024 * 1024;
+  return (size / MB).toFixed(2) + ' MB';
 }
 
 export { formatFileSize };
