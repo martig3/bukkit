@@ -14,13 +14,13 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { CirclePlus, MoonStars, Search, Sun } from 'tabler-icons-react';
+import { MoonStars, Search, Sun } from 'tabler-icons-react';
 import Sidenav from '../appshell/sidenav';
 import { useEffect, useState } from 'react';
 import { Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import { config } from '../utils/config';
 import UploadFiles from '../modals/upload-files';
-import { useDisclosure } from '@mantine/hooks';
+import { NewFolder } from '../modals/new-folder';
 
 
 function Root() {
@@ -90,9 +90,7 @@ function Root() {
         <Flex direction={'row'} gap={8} align={'center'}>
           <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
           {breadcrumbs.length > 0 ?
-            <ActionIcon>
-              <CirclePlus size={22}></CirclePlus>
-            </ActionIcon>
+            <NewFolder />
             : <span />}
         </Flex>
         <UploadFiles />
