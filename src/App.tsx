@@ -12,13 +12,13 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: <Root/>,
+      path: "",
+      element: <Root />,
       loader: rootLoader,
       children: [
         {
           path: 'buckets/:bucket/*',
-          element: <Files/>,
+          element: <Files />,
           loader: filesLoader,
         },
       ],
@@ -28,7 +28,7 @@ function App() {
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        <RouterProvider router={router}/>
+        <RouterProvider router={router} />
       </MantineProvider>
     </ColorSchemeProvider>
   );
