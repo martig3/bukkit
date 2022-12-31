@@ -27,15 +27,14 @@ function Root() {
   const theme = useMantineTheme();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const [sidenavOpened, setSidenavOpened] = useState(false);
-  const [uploadOpened, { close, open }] = useDisclosure(false);
   const { buckets } = useLoaderData() as { buckets: string[] };
   const location = useLocation();
   const genBreadCrumbElements = (location: any) => {
     const paths: string[] = location.pathname.split('/').slice(2)
     return paths.map((item, index, array) => (
-        <Anchor href={'/buckets/' + array.slice(0, index + 1).join('/')} key={index}>
-          {item}
-        </Anchor>
+      <Anchor href={'/buckets/' + array.slice(0, index + 1).join('/')} key={index}>
+        {item}
+      </Anchor>
     ));
   }
   const [breadcrumbs, setBreadcrumbs] = useState(genBreadCrumbElements(location));
@@ -51,7 +50,7 @@ function Root() {
         },
       }}
       navbar={
-        <Sidenav opened={sidenavOpened} buckets={buckets}/>
+        <Sidenav opened={sidenavOpened} buckets={buckets} />
       }
       header={
         <Header height={70} p="md">
@@ -72,14 +71,14 @@ function Root() {
             </Grid.Col>
             <Grid.Col span={4}>
               <Input
-                icon={<Search/>}
+                icon={<Search />}
                 placeholder="Search"
               />
             </Grid.Col>
             <Grid.Col span={2} offset={1}>
               <Group position={'right'}>
                 <ActionIcon variant="default" onClick={() => toggleColorScheme()} size={30}>
-                  {colorScheme === 'dark' ? <Sun size={16}/> : <MoonStars size={16}/>}
+                  {colorScheme === 'dark' ? <Sun size={16} /> : <MoonStars size={16} />}
                 </ActionIcon>
               </Group>
             </Grid.Col>
@@ -87,17 +86,18 @@ function Root() {
         </Header>
       }
     >
-      <UploadFiles opened={uploadOpened} close={close}/>
       <Group position={'apart'}>
         <Flex direction={'row'} gap={8} align={'center'}>
           <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
-          <ActionIcon>
-            <CirclePlus size={22}></CirclePlus>
-          </ActionIcon>
+          {breadcrumbs.length > 0 ?
+            <ActionIcon>
+              <CirclePlus size={22}></CirclePlus>
+            </ActionIcon>
+            : <span />}
         </Flex>
-        {breadcrumbs.length > 0 ? <Button onClick={open}>Upload</Button> : <span/>}
+        <UploadFiles />
       </Group>
-      <Outlet/>
+      <Outlet />
     </AppShell>
   )
 }

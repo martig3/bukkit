@@ -1,42 +1,53 @@
-import { Divider, Group, Modal, Paper, Progress, Text, useMantineTheme } from '@mantine/core';
+import { Button, Divider, Group, Loader, Modal, Paper, Progress, Text, useMantineTheme } from '@mantine/core';
 import { Dropzone, FileWithPath } from '@mantine/dropzone';
 import { FileUpload, Upload, X } from 'tabler-icons-react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { config } from '../utils/config';
+import { useDisclosure } from '@mantine/hooks';
 
-function UploadFiles(props: { opened: boolean, close: any }) {
+function UploadFiles() {
   const theme = useMantineTheme();
   const location = useLocation();
   const [paths] = useState(location.pathname.split('/').slice(2));
-  const [progress, setProgress] = useState(-1);
-  const [filename, setFilename] = useState('');
+  const [uploads, setUploads] = useState<FileWithPath[]>([]);
+  const [progress, setProgress] = useState<number>(0);
+  const [uploadOpened, { close, open }] = useDisclosure(false);
   const client = axios.create({
     baseURL: `${config().baseURL}/buckets`,
   })
 
-  function uploadFiles(files: FileWithPath[]) {
-    const file = files[0];
-    if (!file?.path) {return;}
-    setFilename(file?.path.toString());
-    client.post(`${paths.join('/')}/${file.path}`, files[0], {
+  useEffect(() => {
+    if (uploads.length === 0) return;
+    const file = uploads[0]
+    const filename = file.path;
+    client.post(`${paths.join('/')}/${filename}`, file, {
       onUploadProgress: progressEvent => {
         const percent = Math.floor(progressEvent.progress ? progressEvent.progress * 100 : 0.01 * 100);
-        setProgress(percent)
+        setProgress(percent);
       }
     }).then(() => {
-      setFilename('');
-      setProgress(-1);
+      const updated = [...uploads];
+      updated.shift()
+      setUploads(updated);
     });
+  }, [uploads])
+
+  function uploadFiles(files: FileWithPath[]) {
+    setUploads([...uploads, ...files]);
   }
 
   return (
     <div>
+      <Button onClick={open}
+        leftIcon={uploads.length > 0 ? <Loader size="sm" color='white' /> : <FileUpload />}>
+        Upload
+      </Button>
       <Modal
-        opened={props.opened}
+        opened={uploadOpened}
         centered
-        onClose={props.close}
+        onClose={close}
         title="Upload Files"
       >
         <Dropzone
@@ -56,7 +67,7 @@ function UploadFiles(props: { opened: boolean, close: any }) {
               />
             </Dropzone.Reject>
             <Dropzone.Idle>
-              <FileUpload size={50}/>
+              <FileUpload size={50} />
             </Dropzone.Idle>
 
             <Group position={'center'}>
@@ -64,20 +75,22 @@ function UploadFiles(props: { opened: boolean, close: any }) {
                 Drag files here or click to select files
               </Text>
               <Text size="sm" color="dimmed" inline mt={7}>
-                Attach as many files as you like
+                You can drag multiple files at a time
               </Text>
             </Group>
           </Group>
         </Dropzone>
-        {filename !== '' ?
+        {uploads.length > 0 ?
           <Paper shadow="xs" radius="md" p="md" mt={24}>
-            <Text>{filename}</Text>
-            {progress > 0 ? <><Progress value={progress} animate/><Divider my="sm"/></> : <span/>}
+            {uploads.map((u, i) =>
+            (
+              <div key={i}><Text>{u.path}</Text><Progress value={i === 0 ? progress : 0} animate /><Divider my="sm" /></div>
+            ))}
           </Paper>
-          : <span/>
+          : <></>
         }
       </Modal>
-    </div>
+    </div >
   )
 }
 
