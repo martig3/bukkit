@@ -1,15 +1,18 @@
 import { ActionIcon, Anchor, Group, Table, Text, UnstyledButton } from '@mantine/core';
-import { Download, Folder, LineDashed } from 'tabler-icons-react';
+import { Download, FileX, Folder, LineDashed } from 'tabler-icons-react';
 import { formatFileSize } from '../../utils/file-size';
 import { useLoaderData, useLocation, useParams } from 'react-router-dom';
 import { FileInfo } from '../../model/file-info';
 import { config } from '../../utils/config';
+import { useState } from 'react';
 
 
 function Files() {
   const { bucket } = useParams();
   const { files } = useLoaderData() as { files: FileInfo[] };
   const location = useLocation();
+  const params = useParams();
+  const path = params['*'] ? params['*'] : '';
   const rows = files.map((file) => (
     <tr key={file.name}>
       <td>
@@ -30,7 +33,7 @@ function Files() {
                 })}
               >
                 <Group spacing={4}>
-                  <Folder/>
+                  <Folder />
                   <Text size="sm">{file.name}</Text>
                 </Group>
               </UnstyledButton>
@@ -38,16 +41,23 @@ function Files() {
           </div>
           : <Text sx={(theme) => ({ padding: theme.spacing.xs })}>{file.name}</Text>}
       </td>
-      <td>{file.size && !file.isDirectory ? formatFileSize(file.size) : <LineDashed/>}</td>
+      <td>{file.size && !file.isDirectory ? formatFileSize(file.size) : <LineDashed />}</td>
       <td>{new Date(file.modifiedAt).toLocaleDateString()}</td>
       <td>
-        {!file.isDirectory && bucket ?
-          <a href={downloadUrl(file, bucket)} download>
-            <ActionIcon radius="xl" size={26} variant={'filled'}>
-              <Download size={18}/>
+        <Group>
+          {!file.isDirectory && bucket ?
+            <a href={downloadUrl(file, bucket, path)} download>
+              <ActionIcon radius="xl" size={26} variant={'filled'}>
+                <Download size={18} />
+              </ActionIcon>
+            </a>
+            : ''}
+          {bucket ?
+            <ActionIcon radius="xl" size={26} variant={'filled'} onClick={() => deleteFile(file, bucket, path)}>
+              <FileX size={18} color={'red'} />
             </ActionIcon>
-          </a>
-          : ''}
+            : ''}
+        </Group>
       </td>
     </tr>
   ));
@@ -55,29 +65,43 @@ function Files() {
   return (
     <Table>
       <thead>
-      <tr>
-        <th></th>
-        <th>Size</th>
-        <th>Modified</th>
-        <th></th>
-      </tr>
+        <tr>
+          <th></th>
+          <th>Size</th>
+          <th>Modified</th>
+          <th></th>
+        </tr>
       </thead>
       <tbody>{rows}</tbody>
     </Table>
   );
 }
 
-function downloadUrl(file: FileInfo, bucket: string) {
-  return `${config().baseURL}/buckets/${bucket}/${file.name}`;
+function downloadUrl(file: FileInfo, bucket: string, path: string) {
+  return `${config().baseURL}/buckets/${bucket}/${path}/${file.name}`;
+}
+
+async function deleteFile(file: FileInfo, bucket: string, path: string) {
+  const url = `${config().baseURL}/buckets/${bucket}/${path}/${file.name}`;
+  const resp = await fetch(url, { method: 'DELETE' });
+  if (resp.status === 204) {
+    location.reload();
+  }
+
+}
+
+async function getFiles(bucket: string, path: string): Promise<FileInfo[]> {
+  const resp = await fetch(`${config().baseURL}/buckets/${bucket}/${path}`);
+  return await resp.json();
 }
 
 export default Files
 
 // @ts-ignore
 export async function loader({ params }): Promise<{ files: FileInfo[] }> {
-  const bucket_name = params.bucket;
+  const bucket = params.bucket;
   const path = params['*'];
-  const resp = await fetch(`${config().baseURL}/buckets/${bucket_name}/${path}`);
-  const files = await resp.json();
+  const files = await getFiles(bucket, path);
   return { files }
 }
+
