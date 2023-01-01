@@ -1,5 +1,5 @@
 import { ActionIcon, Avatar, Box, Group, Navbar, NavLink, Text, UnstyledButton, useMantineTheme } from '@mantine/core';
-import { ChevronLeft, ChevronRight, CirclePlus, FileDatabase } from 'tabler-icons-react';
+import { Bucket, ChevronLeft, ChevronRight, CirclePlus } from 'tabler-icons-react';
 import NewBucket from '../modals/new-bucket';
 import { useDisclosure } from '@mantine/hooks';
 import { Link, useParams } from 'react-router-dom';
@@ -16,18 +16,17 @@ function Sidenav(props: { opened: boolean, buckets: string[] }) {
           sx={{
             paddingTop: theme.spacing.sm,
             paddingBottom: theme.spacing.sm,
-            borderBottom: `1px solid ${
-              theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-            }`,
+            borderBottom: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
+              }`,
           }}
         >
           <Group spacing={2} position={'center'}>
-            <FileDatabase/>
-            Buckets
+            <Bucket />
+            <Text weight={'bold'}>Buckets</Text>
             <span style={{ flex: '1 1 auto' }}></span>
 
             <ActionIcon radius="xl" size={26} variant={'transparent'}>
-              <CirclePlus onClick={open}/>
+              <CirclePlus onClick={open} />
             </ActionIcon>
             <NewBucket opened={opened} close={close}></NewBucket>
           </Group>
@@ -52,9 +51,8 @@ function Sidenav(props: { opened: boolean, buckets: string[] }) {
         <Box
           sx={{
             paddingTop: theme.spacing.sm,
-            borderTop: `1px solid ${
-              theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-            }`,
+            borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
+              }`,
           }}
         >
           <UnstyledButton
@@ -84,7 +82,7 @@ function Sidenav(props: { opened: boolean, buckets: string[] }) {
                 </Text>
               </Box>
 
-              {theme.dir === 'ltr' ? <ChevronRight size={18}/> : <ChevronLeft size={18}/>}
+              {theme.dir === 'ltr' ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
             </Group>
           </UnstyledButton>
         </Box>
