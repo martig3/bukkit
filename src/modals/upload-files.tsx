@@ -2,7 +2,6 @@ import { Button, Divider, Group, Loader, Modal, Paper, Progress, Text, useMantin
 import { Dropzone, FileWithPath } from '@mantine/dropzone';
 import { FileUpload, Upload, X } from 'tabler-icons-react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { config } from '../utils/config';
 import { useDisclosure } from '@mantine/hooks';
