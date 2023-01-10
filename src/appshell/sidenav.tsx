@@ -1,13 +1,15 @@
-import { ActionIcon, Avatar, Box, Group, Navbar, NavLink, Text, UnstyledButton, useMantineTheme } from '@mantine/core';
-import { Bucket, ChevronLeft, ChevronRight, CirclePlus } from 'tabler-icons-react';
+import { ActionIcon, Avatar, Box, Group, Menu, Navbar, NavLink, Text, UnstyledButton, useMantineTheme } from '@mantine/core';
+import { Bucket, ChevronLeft, ChevronRight, CirclePlus, Login, Logout } from 'tabler-icons-react';
 import NewBucket from '../modals/new-bucket';
 import { useDisclosure } from '@mantine/hooks';
 import { Link, useParams } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function Sidenav(props: { opened: boolean, buckets: string[] }) {
   const theme = useMantineTheme();
   const [opened, { close, open }] = useDisclosure(false);
   const { bucket } = useParams();
+  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
   return (
     <Navbar p="md" hiddenBreakpoint="sm" hidden={!props.opened} width={{ sm: 300 }}>
@@ -48,44 +50,53 @@ function Sidenav(props: { opened: boolean, buckets: string[] }) {
         )}
       </Navbar.Section>
       <Navbar.Section>
-        <Box
-          sx={{
-            paddingTop: theme.spacing.sm,
-            borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-              }`,
-          }}
-        >
-          <UnstyledButton
-            sx={{
-              display: 'block',
-              width: '100%',
-              padding: theme.spacing.xs,
-              borderRadius: theme.radius.sm,
-              color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+        <Menu position='right-end'>
+          <Menu.Target>
+            <Box
+              sx={{
+                paddingTop: theme.spacing.sm,
+                borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
+                  }`,
+              }}
+            >
+              <UnstyledButton
+                sx={{
+                  display: 'block',
+                  width: '100%',
+                  padding: theme.spacing.xs,
+                  borderRadius: theme.radius.sm,
+                  color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
 
-              '&:hover': {
-                backgroundColor:
-                  theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-              },
-            }}
-          >
-            <Group>
-              <Avatar
-                radius="xl"
-              />
-              <Box sx={{ flex: 1 }}>
-                <Text size="sm" weight={500}>
-                  Amy Horsefighter
-                </Text>
-                <Text color="dimmed" size="xs">
-                  ahorsefighter@gmail.com
-                </Text>
-              </Box>
+                  '&:hover': {
+                    backgroundColor:
+                      theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+                  },
+                }}
+              >
+                <Group>
+                  <Avatar
+                    radius="xl"
+                  />
+                  <Box sx={{ flex: 1 }}>
+                    <Text size="sm" weight={500}>
+                      {user?.name}
+                    </Text>
+                    <Text color="dimmed" size="xs">
+                      {user?.email}
+                    </Text>
+                  </Box>
+                  {theme.dir === 'ltr' ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+                </Group>
+              </UnstyledButton>
+            </Box>
+          </Menu.Target>
+          <Menu.Dropdown>
+            {!isAuthenticated ?
+              <Menu.Item icon={<Login />} onClick={() => loginWithRedirect()}>Login</Menu.Item>
+              : <Menu.Item icon={<Logout />} onClick={() => logout()}>Logout</Menu.Item>}
+          </Menu.Dropdown>
+        </Menu>
 
-              {theme.dir === 'ltr' ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-            </Group>
-          </UnstyledButton>
-        </Box>
       </Navbar.Section>
     </Navbar>
   )
