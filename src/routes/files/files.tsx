@@ -1,10 +1,9 @@
 import { ActionIcon, Anchor, Group, Table, Text, UnstyledButton } from '@mantine/core';
-import { Download, FileX, Folder, LineDashed } from 'tabler-icons-react';
+import { FileX, Folder, LineDashed } from 'tabler-icons-react';
 import { formatFileSize } from '../../utils/file-size';
-import { useLoaderData, useLocation, useParams } from 'react-router-dom';
+import { Link, useLoaderData, useLocation, useParams } from 'react-router-dom';
 import { FileInfo } from '../../model/file-info';
 import { config } from '../../utils/config';
-import { useState } from 'react';
 
 
 function Files() {
@@ -18,7 +17,7 @@ function Files() {
       <td>
         {file.isDirectory ?
           <div>
-            <Anchor href={`${location.pathname}/${file.name}`}>
+            <Link to={`${location.pathname}/${file.name}`}>
               <UnstyledButton
                 sx={(theme) => ({
                   display: 'block',
@@ -37,7 +36,7 @@ function Files() {
                   <Text size="sm">{file.name}</Text>
                 </Group>
               </UnstyledButton>
-            </Anchor>
+            </Link>
           </div>
           :
           <Anchor href={downloadUrl(file, bucket ? bucket : '', path)} download>
