@@ -17,10 +17,11 @@ import {
 import { MoonStars, Search, Sun } from 'tabler-icons-react';
 import Sidenav from '../appshell/sidenav';
 import { useEffect, useState } from 'react';
-import { Outlet, useLoaderData, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import { config } from '../utils/config';
 import UploadFiles from '../modals/upload-files';
 import { NewFolder } from '../modals/new-folder';
+import { useAuth0 } from '@auth0/auth0-react';
 
 
 function Root() {
@@ -32,9 +33,9 @@ function Root() {
   const genBreadCrumbElements = (location: any) => {
     const paths: string[] = location.pathname.split('/').slice(2)
     return paths.map((item, index, array) => (
-      <Anchor href={'/buckets/' + array.slice(0, index + 1).join('/')} key={index}>
+      <Link to={'/buckets/' + array.slice(0, index + 1).join('/')} key={index}>
         {item}
-      </Anchor>
+      </Link>
     ));
   }
   const [breadcrumbs, setBreadcrumbs] = useState(genBreadCrumbElements(location));
