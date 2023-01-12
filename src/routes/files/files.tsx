@@ -1,7 +1,7 @@
 import { ActionIcon, Anchor, Group, Table, Text, UnstyledButton } from '@mantine/core';
 import { FileX, Folder, LineDashed } from 'tabler-icons-react';
 import { formatFileSize } from '../../utils/file-size';
-import { Link, useLoaderData, useLocation, useParams } from 'react-router-dom';
+import { Link, LoaderFunctionArgs, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FileInfo } from '../../model/file-info';
 import { config } from '../../utils/config';
 
@@ -9,6 +9,7 @@ import { config } from '../../utils/config';
 function Files() {
   const { bucket } = useParams();
   const { files } = useLoaderData() as { files: FileInfo[] };
+  const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
   const path = params['*'] ? params['*'] : '';
@@ -63,7 +64,7 @@ function Files() {
       <td>
         <Group>
           {bucket ?
-            <ActionIcon radius="xl" size={26} variant={'filled'} onClick={() => deleteFile(file, bucket, path)}>
+            <ActionIcon radius="xl" size={26} variant={'filled'} onClick={() => deleteFile(file, bucket, path, navigate)}>
               <FileX size={18} color={'red'} />
             </ActionIcon>
             : ''}
@@ -91,11 +92,11 @@ function downloadUrl(file: FileInfo, bucket: string, path: string) {
   return `${config().baseURL}/buckets/${bucket}/${path}${file.name}`;
 }
 
-async function deleteFile(file: FileInfo, bucket: string, path: string) {
+async function deleteFile(file: FileInfo, bucket: string, path: string, navigate: any) {
   const url = `${config().baseURL}/buckets/${bucket}/${path}${file.name}`;
   const resp = await fetch(url, { method: 'DELETE' });
   if (resp.status === 204) {
-    location.reload();
+    navigate(window.location.pathname);
   }
 
 }
@@ -107,10 +108,9 @@ async function getFiles(bucket: string, path: string): Promise<FileInfo[]> {
 
 export default Files
 
-// @ts-ignore
-export async function loader({ params }): Promise<{ files: FileInfo[] }> {
-  const bucket = params.bucket;
-  const path = params['*'];
+export async function loader({ params }: LoaderFunctionArgs): Promise<{ files: FileInfo[] }> {
+  const bucket = params.bucket ?? '';
+  const path = params['*'] ?? '';
   const files = await getFiles(bucket, path);
   return { files }
 }

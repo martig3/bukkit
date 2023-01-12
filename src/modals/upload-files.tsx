@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { config } from '../utils/config';
 import { useDisclosure } from '@mantine/hooks';
+import { useNavigate } from 'react-router-dom';
 
 function UploadFiles() {
   const theme = useMantineTheme();
@@ -12,6 +13,7 @@ function UploadFiles() {
   const [uploads, setUploads] = useState<FileWithPath[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [uploadOpened, { close, open }] = useDisclosure(false);
+  const navigate = useNavigate();
   const client = axios.create({
     baseURL: `${config().baseURL}/buckets`,
   })
@@ -47,7 +49,7 @@ function UploadFiles() {
         centered
         onClose={() => {
           close();
-          location.reload();
+          navigate(location.pathname)
         }}
         title="Upload Files"
       >
