@@ -1,38 +1,53 @@
-import { Button, Divider, Group, Loader, Modal, Paper, Progress, Text, useMantineTheme } from '@mantine/core';
-import { Dropzone, FileWithPath } from '@mantine/dropzone';
-import { FileUpload, Upload, X } from 'tabler-icons-react';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { config } from '../utils/config';
-import { useDisclosure } from '@mantine/hooks';
-import { useNavigate } from 'react-router-dom';
+import {
+  Button,
+  Divider,
+  Group,
+  Loader,
+  Modal,
+  Paper,
+  Progress,
+  Text,
+  useMantineTheme,
+} from "@mantine/core";
+import { Dropzone, FileWithPath } from "@mantine/dropzone";
+import { FileUpload, Upload, X } from "tabler-icons-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { config } from "../utils/config";
+import { useDisclosure } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 
 function UploadFiles() {
   const theme = useMantineTheme();
-  const [paths] = useState(location.pathname.split('/').slice(2));
+  const [paths] = useState(location.pathname.split("/").slice(2));
   const [uploads, setUploads] = useState<FileWithPath[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [uploadOpened, { close, open }] = useDisclosure(false);
   const navigate = useNavigate();
   const client = axios.create({
     baseURL: `${config().baseURL}/buckets`,
-  })
+    withCredentials: true,
+  });
 
   useEffect(() => {
     if (uploads.length === 0) return;
-    const file = uploads[0]
+    const file = uploads[0];
     const filename = file.path;
-    client.post(`${paths.join('/')}/${filename}`, file, {
-      onUploadProgress: progressEvent => {
-        const percent = Math.floor(progressEvent.progress ? progressEvent.progress * 100 : 0.01 * 100);
-        setProgress(percent);
-      }
-    }).then(() => {
-      const updated = [...uploads];
-      updated.shift()
-      setUploads(updated);
-    });
-  }, [uploads])
+    client
+      .post(`${paths.join("/")}/${filename}`, file, {
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.floor(
+            progressEvent.progress ? progressEvent.progress * 100 : 0.01 * 100
+          );
+          setProgress(percent);
+        },
+      })
+      .then(() => {
+        const updated = [...uploads];
+        updated.shift();
+        setUploads(updated);
+      });
+  }, [uploads]);
 
   function uploadFiles(files: FileWithPath[]) {
     setUploads([...uploads, ...files]);
@@ -40,8 +55,17 @@ function UploadFiles() {
 
   return (
     <div>
-      <Button onClick={open}
-        leftIcon={uploads.length > 0 ? <Loader size="sm" color='white' /> : <FileUpload />}>
+      <Button
+        onClick={open}
+        disabled={!window.location.href.includes("/buckets/")}
+        leftIcon={
+          uploads.length > 0 ? (
+            <Loader size="sm" color="white" />
+          ) : (
+            <FileUpload />
+          )
+        }
+      >
         Upload
       </Button>
       <Modal
@@ -49,31 +73,37 @@ function UploadFiles() {
         centered
         onClose={() => {
           close();
-          navigate(location.pathname)
+          navigate(location.pathname);
         }}
         title="Upload Files"
       >
-        <Dropzone
-          onDrop={(files) => uploadFiles(files)}
-        >
-          <Group position="center" spacing="xl" style={{ minHeight: 100, pointerEvents: 'none' }}>
+        <Dropzone onDrop={(files) => uploadFiles(files)}>
+          <Group
+            position="center"
+            spacing="xl"
+            style={{ minHeight: 100, pointerEvents: "none" }}
+          >
             <Dropzone.Accept>
               <Upload
                 size={50}
-                color={theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 4 : 6]}
+                color={
+                  theme.colors[theme.primaryColor][
+                    theme.colorScheme === "dark" ? 4 : 6
+                  ]
+                }
               />
             </Dropzone.Accept>
             <Dropzone.Reject>
               <X
                 size={50}
-                color={theme.colors.red[theme.colorScheme === 'dark' ? 4 : 6]}
+                color={theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]}
               />
             </Dropzone.Reject>
             <Dropzone.Idle>
               <FileUpload size={50} />
             </Dropzone.Idle>
 
-            <Group position={'center'}>
+            <Group position={"center"}>
               <Text size="xl" inline>
                 Drag files here or click to select files
               </Text>
@@ -83,18 +113,22 @@ function UploadFiles() {
             </Group>
           </Group>
         </Dropzone>
-        {uploads.length > 0 ?
+        {uploads.length > 0 ? (
           <Paper shadow="xs" radius="md" p="md" mt={24}>
-            {uploads.map((u, i) =>
-            (
-              <div key={i}><Text>{u.path}</Text><Progress value={i === 0 ? progress : 0} animate /><Divider my="sm" /></div>
+            {uploads.map((u, i) => (
+              <div key={i}>
+                <Text>{u.path}</Text>
+                <Progress value={i === 0 ? progress : 0} animate />
+                <Divider my="sm" />
+              </div>
             ))}
           </Paper>
-          : <></>
-        }
+        ) : (
+          <></>
+        )}
       </Modal>
-    </div >
-  )
+    </div>
+  );
 }
 
-export default UploadFiles
+export default UploadFiles;

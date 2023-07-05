@@ -28,6 +28,7 @@ import {
 import { config } from "../utils/config";
 import UploadFiles from "../modals/upload-files";
 import { NewFolder } from "../modals/new-folder";
+import { UserInfo } from "../model/user-info";
 
 function Root() {
   const theme = useMantineTheme();
@@ -35,7 +36,7 @@ function Root() {
   const [sidenavOpened, setSidenavOpened] = useState(false);
   const { buckets, user } = useLoaderData() as {
     buckets: string[];
-    user: { name: string; email: string };
+    user: UserInfo;
   };
   const location = useLocation();
   const genBreadCrumbElements = (location: any) => {

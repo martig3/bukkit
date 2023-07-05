@@ -7,21 +7,16 @@ import { config } from "../utils/config";
 
 export function NewFolder() {
   const { bucket } = useParams();
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [opened, { close, open }] = useDisclosure(false);
   const params = useParams();
-  const path = params['*'] ? params['*'] : '';
+  const path = params["*"] ? params["*"] : "";
   return (
     <div>
       <ActionIcon onClick={() => open()}>
         <CirclePlus size={22}></CirclePlus>
       </ActionIcon>
-      <Modal
-        opened={opened}
-        centered
-        onClose={close}
-        title="New Folder"
-      >
+      <Modal opened={opened} centered onClose={close} title="New Folder">
         <TextInput
           placeholder="Folder name"
           label="Name"
@@ -34,21 +29,28 @@ export function NewFolder() {
         <Button
           disabled={name.length === 0}
           onClick={() => {
-            const success = createFolder(name, bucket ? bucket : 'unknown', path);
+            const success = createFolder(
+              name,
+              bucket ? bucket : "unknown",
+              path
+            );
             if (!success) {
               return;
             }
-            setName('');
+            setName("");
             close();
             location.reload();
-          }}>Create Folder</Button>
+          }}
+        >
+          Create Folder
+        </Button>
       </Modal>
-    </div >
-  )
+    </div>
+  );
 
   async function createFolder(name: string, bucket: string, path: string) {
     const url = `${config().baseURL}/buckets/${bucket}/${path}/${name}`;
-    const resp = await fetch(url, { method: 'POST' });
+    const resp = await fetch(url, { method: "POST", credentials: "include" });
     return resp.status === 204;
   }
 }

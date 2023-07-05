@@ -22,18 +22,19 @@ import NewBucket from "../modals/new-bucket";
 import { useDisclosure } from "@mantine/hooks";
 import { Link, redirect, useNavigate, useParams } from "react-router-dom";
 import { config } from "../utils/config";
+import { UserInfo } from "../model/user-info";
 
 function Sidenav(props: {
   opened: boolean;
   buckets: string[];
-  user: { name: string; email: string };
+  user: UserInfo;
 }) {
   const navigate = useNavigate();
   const theme = useMantineTheme();
   const [opened, { close, open }] = useDisclosure(false);
   const { bucket } = useParams();
   const logout = async () => {
-    await fetch(`${config().baseURL}/user/logout`, { credentials: "include" });
+    await fetch(`${config().baseURL}/auth/logout`, { credentials: "include" });
     navigate("/login");
   };
 
@@ -113,7 +114,7 @@ function Sidenav(props: {
                 }}
               >
                 <Group>
-                  <Avatar radius="xl" />
+                  <Avatar radius="xl" src={props.user.discord_avatar} />
                   <Box sx={{ flex: 1 }}>
                     <Text size="sm" weight={500}>
                       {props.user?.name}

@@ -127,7 +127,7 @@ function Files() {
 }
 
 function downloadUrl(file: FileInfo, bucket: string, path: string) {
-  return `${config().baseURL}/buckets/${bucket}/${path}${file.name}`;
+  return `${config().baseURL}/buckets/${bucket}/${path}/${file.name}`;
 }
 
 async function deleteFile(
@@ -136,7 +136,7 @@ async function deleteFile(
   path: string,
   navigate: any
 ) {
-  const url = `${config().baseURL}/buckets/${bucket}/${path}${file.name}`;
+  const url = `${config().baseURL}/buckets/${bucket}/${path}/${file.name}`;
   const resp = await fetch(url, { method: "DELETE", credentials: "include" });
   if (resp.status === 204) {
     navigate(window.location.pathname);
