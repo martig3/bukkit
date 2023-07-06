@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Avatar,
   Box,
+  Flex,
   Group,
   Menu,
   Navbar,
@@ -31,7 +32,6 @@ function Sidenav(props: {
 }) {
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  const [opened, { close, open }] = useDisclosure(false);
   const { bucket } = useParams();
   const logout = async () => {
     await fetch(`${config().baseURL}/auth/logout`, { credentials: "include" });
@@ -57,16 +57,12 @@ function Sidenav(props: {
             }`,
           }}
         >
-          <Group spacing={2} position={"center"}>
+          <Flex justify={"space-between"}>
             <Bucket />
             <Text weight={"bold"}>Buckets</Text>
             <span style={{ flex: "1 1 auto" }}></span>
-
-            <ActionIcon radius="xl" size={26} variant={"transparent"}>
-              <CirclePlus onClick={open} />
-            </ActionIcon>
-            <NewBucket opened={opened} close={close}></NewBucket>
-          </Group>
+            <NewBucket />
+          </Flex>
         </Box>
       </Navbar.Section>
       <Navbar.Section grow mt="xs">
@@ -114,9 +110,13 @@ function Sidenav(props: {
                 }}
               >
                 <Group>
-                  <Avatar radius="xl" src={props.user.discord_avatar} />
+                  <Avatar
+                    size={"lg"}
+                    radius="xl"
+                    src={props.user.discord_avatar}
+                  />
                   <Box sx={{ flex: 1 }}>
-                    <Text size="sm" weight={500}>
+                    <Text size="md" weight={600}>
                       {props.user?.name}
                     </Text>
                     <Text color="dimmed" size="xs">

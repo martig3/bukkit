@@ -1,58 +1,86 @@
-import { Button, Modal, TextInput } from '@mantine/core';
-import { useState } from 'react';
-import { useDebouncedState } from '@mantine/hooks';
+import { ActionIcon, Button, Modal, TextInput } from "@mantine/core";
+import { useState } from "react";
+import { useDebouncedState, useDisclosure } from "@mantine/hooks";
+import { config } from "../utils/config";
+import { notifications } from "@mantine/notifications";
+import { useNavigate } from "react-router-dom";
+import { CirclePlus } from "tabler-icons-react";
 
-function NewBucket(props: { opened: boolean, close: any }) {
-  const [name, setName] = useState('');
-  const [nameDebounced, setNameDebounced] = useDebouncedState('', 500);
+function NewBucket() {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [nameDebounced, setNameDebounced] = useDebouncedState("", 500);
+  const [opened, { close, open }] = useDisclosure(false);
   return (
     <div>
-      <Modal
-        opened={props.opened}
-        centered
-        onClose={props.close}
-        title="New Bucket"
-      >
+      <ActionIcon size={26} variant={"subtle"}>
+        <CirclePlus onClick={open} />
+      </ActionIcon>
+      <Modal opened={opened} centered onClose={close} title="New Bucket">
         <TextInput
-          placeholder="New bucket"
+          placeholder="Bucket name"
           label="Name"
           mb={16}
           error={errorText(nameDebounced)}
           value={name}
           onChange={(e) => {
-            setName(e.target.value);
-            setNameDebounced(e.target.value);
+            const val = e.target.value.replace(" ", "-");
+            setName(val);
+            setNameDebounced(val);
           }}
         />
         <Button
-          disabled={!maxLength(name)}
+          disabled={!minLength(name)}
           onClick={() => {
             const error = errorText(name);
             if (error) {
-            } else {
-              setName('');
-              setNameDebounced('');
-              props.close();
+              return;
             }
-          }}>Add</Button>
+            const success = createBucket(name);
+            if (!success) {
+              notifications.show({
+                title: "Error creating bucket",
+                message: "Could not create bucket, please try again later",
+              });
+              return;
+            }
+            setName("");
+            setNameDebounced("");
+            close();
+            navigate(window.location);
+          }}
+        >
+          Add
+        </Button>
       </Modal>
     </div>
-  )
+  );
 }
-
+async function createBucket(name: string) {
+  const url = `${config().baseURL}/buckets/create/${name.trim()}`;
+  const resp = await fetch(url, { method: "POST", credentials: "include" });
+  return resp.status === 204;
+}
 function errorText(input: string): string | null {
-  const lengthError = "Name must be longer than 5 characters";
+  const minLengthError = "Name must be longer than 5 characters";
+  const maxLengthError = "Name must less than 25 characters";
   if (input.length === 0) {
     return null;
   }
+  if (!minLength(input)) {
+    return minLengthError;
+  }
   if (!maxLength(input)) {
-    return lengthError;
+    return maxLengthError;
   }
   return null;
 }
 
-function maxLength(input: string) {
+function minLength(input: string) {
   return input.length >= 5;
 }
 
-export default NewBucket
+function maxLength(input: string) {
+  return input.length <= 25;
+}
+export default NewBucket;

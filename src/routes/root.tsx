@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Anchor,
   AppShell,
+  Avatar,
   Breadcrumbs,
   Burger,
   Button,
@@ -11,11 +12,12 @@ import {
   Header,
   Input,
   MediaQuery,
+  Menu,
   Title,
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { MoonStars, Search, Sun } from "tabler-icons-react";
+import { DotsVertical, MoonStars, Search, Sun } from "tabler-icons-react";
 import Sidenav from "../appshell/sidenav";
 import { useEffect, useState } from "react";
 import {
@@ -29,6 +31,10 @@ import { config } from "../utils/config";
 import UploadFiles from "../modals/upload-files";
 import { NewFolder } from "../modals/new-folder";
 import { UserInfo } from "../model/user-info";
+import FileSearch from "../components/file-search";
+import BucketMenu from "../components/bucket-menu";
+import DeleteBucket from "../components/delete-bucket";
+import { useDisclosure } from "@mantine/hooks";
 
 function Root() {
   const theme = useMantineTheme();
@@ -83,11 +89,12 @@ function Root() {
                     mr="xl"
                   />
                 </MediaQuery>
+                <Avatar mx={8} src={"/android-chrome-192x192.png"} />
                 <Title order={2}>Mert Bucket</Title>
               </div>
             </Grid.Col>
             <Grid.Col span={4}>
-              <Input icon={<Search />} placeholder="Search" />
+              <FileSearch />
             </Grid.Col>
             <Grid.Col span={2} offset={1}>
               <Group position={"right"}>
@@ -113,7 +120,10 @@ function Root() {
           <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
           {breadcrumbs.length > 0 ? <NewFolder /> : <span />}
         </Flex>
-        <UploadFiles />
+        <Group spacing={"sm"}>
+          <UploadFiles />
+          <BucketMenu />
+        </Group>
       </Group>
       <Outlet />
     </AppShell>

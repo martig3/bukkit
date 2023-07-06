@@ -1,4 +1,4 @@
-import { Button, Center } from "@mantine/core";
+import { AppShell, Button, Card, Center, Flex } from "@mantine/core";
 import { BrandDiscord } from "tabler-icons-react";
 import { config } from "../../utils/config";
 export function Login() {
@@ -6,18 +6,25 @@ export function Login() {
     window.location.href = `${config().baseURL}/auth/login`;
   };
   return (
-    <div
-      style={{
-        width: "100vh",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <AppShell
+      styles={() => ({
+        main: {},
+      })}
     >
-      <Button leftIcon={<BrandDiscord />} onClick={async () => await login()}>
-        Login
-      </Button>
-    </div>
+      <Center maw={400} h={"100%"} mx="auto">
+        <Card px={32} pb={64} w={300}>
+          <h1>Login</h1>
+          <Flex justify={"center"}>
+            <Button
+              leftIcon={<BrandDiscord />}
+              onClick={async () => await login()}
+              w={"100%"}
+            >
+              Discord
+            </Button>
+          </Flex>
+        </Card>
+      </Center>
+    </AppShell>
   );
 }

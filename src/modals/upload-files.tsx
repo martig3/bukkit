@@ -15,17 +15,18 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { config } from "../utils/config";
 import { useDisclosure } from "@mantine/hooks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
 
 function UploadFiles() {
   const theme = useMantineTheme();
-  const [paths] = useState(location.pathname.split("/").slice(2));
+  const location = useLocation();
   const [uploads, setUploads] = useState<FileWithPath[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [uploadOpened, { close, open }] = useDisclosure(false);
   const navigate = useNavigate();
   const client = axios.create({
-    baseURL: `${config().baseURL}/buckets`,
+    baseURL: config().baseURL,
     withCredentials: true,
   });
 
@@ -34,7 +35,7 @@ function UploadFiles() {
     const file = uploads[0];
     const filename = file.path;
     client
-      .post(`${paths.join("/")}/${filename}`, file, {
+      .post(`${location.pathname}/${filename}`, file, {
         onUploadProgress: (progressEvent) => {
           const percent = Math.floor(
             progressEvent.progress ? progressEvent.progress * 100 : 0.01 * 100
@@ -44,8 +45,23 @@ function UploadFiles() {
       })
       .then(() => {
         const updated = [...uploads];
-        updated.shift();
+        const uploaded = updated.shift();
         setUploads(updated);
+        notifications.show({
+          title: "File Uploaded",
+          message: `Uploaded ${uploaded?.name} successfully`,
+          color: "green",
+        });
+      })
+      .catch(() => {
+        const updated = [...uploads];
+        const uploaded = updated.shift();
+        setUploads(updated);
+        notifications.show({
+          title: "Error Uploading File",
+          message: `Failed to upload ${uploaded?.name}, please try again later.`,
+          color: "red",
+        });
       });
   }, [uploads]);
 

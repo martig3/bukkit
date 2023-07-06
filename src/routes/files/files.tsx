@@ -27,7 +27,7 @@ function Files() {
   const params = useParams();
   const path = params["*"] ? params["*"] : "";
   const rows = files.map((file) => (
-    <tr key={file.name}>
+    <tr key={file.name} id="parent-row">
       <td>
         {file.isDirectory ? (
           <div>
@@ -93,7 +93,7 @@ function Files() {
       </td>
       <td>{new Date(file.modifiedAt).toLocaleDateString()}</td>
       <td>
-        <Group>
+        <Group className="delete-button">
           {bucket ? (
             <ActionIcon
               radius="xl"
@@ -127,7 +127,7 @@ function Files() {
 }
 
 function downloadUrl(file: FileInfo, bucket: string, path: string) {
-  return `${config().baseURL}/buckets/${bucket}/${path}/${file.name}`;
+  return `${config().baseURL}/buckets/${bucket}/${path}${file.name}`;
 }
 
 async function deleteFile(
