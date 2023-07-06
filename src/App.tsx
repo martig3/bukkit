@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root, { loader as rootLoader } from "./routes/root";
 import Files, { loader as filesLoader } from "./routes/files/files";
 import { Login } from "./routes/login/login";
+import { Notifications } from "@mantine/notifications";
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
@@ -44,6 +45,7 @@ function App() {
         withGlobalStyles
         withNormalizeCSS
       >
+        <Notifications limit={5} />
         <RouterProvider router={router} />
       </MantineProvider>
     </ColorSchemeProvider>
