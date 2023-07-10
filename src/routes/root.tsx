@@ -17,7 +17,13 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { DotsVertical, MoonStars, Search, Sun } from "tabler-icons-react";
+import {
+  DotsVertical,
+  MoonStars,
+  Search,
+  Settings,
+  Sun,
+} from "tabler-icons-react";
 import Sidenav from "../appshell/sidenav";
 import { useEffect, useState } from "react";
 import {
@@ -35,6 +41,7 @@ import FileSearch from "../components/file-search";
 import BucketMenu from "../components/bucket-menu";
 import DeleteBucket from "../components/delete-bucket";
 import { useDisclosure } from "@mantine/hooks";
+import { NavLink } from "react-router-dom";
 
 function Root() {
   const theme = useMantineTheme();
@@ -68,50 +75,67 @@ function Root() {
               : theme.colors.gray[0],
         },
       }}
-      navbar={<Sidenav opened={sidenavOpened} buckets={buckets} user={user} />}
+      navbar={
+        <Sidenav
+          opened={sidenavOpened}
+          buckets={buckets}
+          user={user}
+          setSidenavOpened={setSidenavOpened}
+        />
+      }
       header={
         <Header height={70} p="md">
-          <Grid sx={{ height: "100%" }} px={20} align={"center"}>
-            <Grid.Col span={5}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
-                <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                  <Burger
-                    opened={sidenavOpened}
-                    onClick={() => setSidenavOpened((o) => !o)}
-                    size="sm"
-                    color={theme.colors.gray[6]}
-                    mr="xl"
-                  />
-                </MediaQuery>
-                <Avatar mx={8} src={"/android-chrome-192x192.png"} />
-                <Title order={2}>Mert Bucket</Title>
-              </div>
-            </Grid.Col>
-            <Grid.Col span={4}>
+          <Flex
+            sx={{ height: "100%" }}
+            px={20}
+            align={"center"}
+            justify="space-between"
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+                <Burger
+                  opened={sidenavOpened}
+                  onClick={() => setSidenavOpened((o) => !o)}
+                  size="sm"
+                  color={theme.colors.gray[6]}
+                  mr="xl"
+                />
+              </MediaQuery>
+              <Avatar mx={8} src={"/android-chrome-192x192.png"} />
+              <Title order={2}>Mert Bucket</Title>
+            </div>
+            {/* <Grid.Col span={4}>
               <FileSearch />
-            </Grid.Col>
-            <Grid.Col span={2} offset={1}>
-              <Group position={"right"}>
-                <ActionIcon
-                  variant="default"
-                  onClick={() => toggleColorScheme()}
-                  size={30}
-                >
-                  {colorScheme === "dark" ? (
-                    <Sun size={16} />
-                  ) : (
-                    <MoonStars size={16} />
-                  )}
-                </ActionIcon>
-              </Group>
-            </Grid.Col>
-          </Grid>
+            </Grid.Col> */}
+            <Group position={"right"}>
+              {user.isOwner ? (
+                <NavLink to={"/admin/invites"}>
+                  <ActionIcon>
+                    <Settings />
+                  </ActionIcon>
+                </NavLink>
+              ) : (
+                <></>
+              )}
+              <ActionIcon
+                variant="default"
+                onClick={() => toggleColorScheme()}
+                size={30}
+              >
+                {colorScheme === "dark" ? (
+                  <Sun size={16} />
+                ) : (
+                  <MoonStars size={16} />
+                )}
+              </ActionIcon>
+            </Group>
+          </Flex>
         </Header>
       }
     >

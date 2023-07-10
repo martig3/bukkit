@@ -13,7 +13,10 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
     <>
       <Modal
         opened={props.opened}
-        onClose={() => props.close()}
+        onClose={() => {
+          setName("");
+          props.close();
+        }}
         title="Delete Bucket"
       >
         <Stack>
@@ -25,7 +28,6 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
             to confirm.
           </Text>
           <TextInput
-            placeholder="Folder name"
             mb={16}
             value={name}
             onChange={(e) => {

@@ -10,6 +10,11 @@ import Root, { loader as rootLoader } from "./routes/root";
 import Files, { loader as filesLoader } from "./routes/files/files";
 import { Login } from "./routes/login/login";
 import { Notifications } from "@mantine/notifications";
+import Admin from "./routes/admin/admin";
+import Invites, {
+  loader as invitesLoader,
+} from "./routes/admin/invites/invites";
+import NoInvite from "./routes/errors/no-invite";
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
@@ -32,6 +37,21 @@ function App() {
     {
       path: "login",
       element: <Login />,
+    },
+    {
+      path: "admin",
+      element: <Admin />,
+      children: [
+        {
+          path: "invites",
+          element: <Invites />,
+          loader: invitesLoader,
+        },
+      ],
+    },
+    {
+      path: "no-invite",
+      element: <NoInvite />,
     },
   ]);
 

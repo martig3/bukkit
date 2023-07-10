@@ -11,17 +11,9 @@ import {
   UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
-import {
-  Bucket,
-  ChevronLeft,
-  ChevronRight,
-  CirclePlus,
-  Login,
-  Logout,
-} from "tabler-icons-react";
+import { Bucket, ChevronLeft, ChevronRight, Logout } from "tabler-icons-react";
 import NewBucket from "../modals/new-bucket";
-import { useDisclosure } from "@mantine/hooks";
-import { Link, redirect, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { config } from "../utils/config";
 import { UserInfo } from "../model/user-info";
 
@@ -29,6 +21,7 @@ function Sidenav(props: {
   opened: boolean;
   buckets: string[];
   user: UserInfo;
+  setSidenavOpened: any;
 }) {
   const navigate = useNavigate();
   const theme = useMantineTheme();
@@ -67,7 +60,11 @@ function Sidenav(props: {
       </Navbar.Section>
       <Navbar.Section grow mt="xs">
         {props.buckets.map((b) => (
-          <Link key={b} to={`/buckets/${b}`}>
+          <Link
+            key={b}
+            to={`/buckets/${b}`}
+            onClick={() => props.setSidenavOpened(false)}
+          >
             <NavLink
               label={b}
               variant={"filled"}
@@ -113,7 +110,7 @@ function Sidenav(props: {
                   <Avatar
                     size={"lg"}
                     radius="xl"
-                    src={props.user.discord_avatar}
+                    src={props.user.discordAvatar}
                   />
                   <Box sx={{ flex: 1 }}>
                     <Text size="md" weight={600}>
