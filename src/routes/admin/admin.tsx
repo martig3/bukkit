@@ -1,4 +1,9 @@
-import { LoaderFunctionArgs, Outlet, useLoaderData } from "react-router-dom";
+import {
+  LoaderFunctionArgs,
+  Outlet,
+  redirect,
+  useLoaderData,
+} from "react-router-dom";
 import { UserInvite } from "../../model/user-invite";
 import { config } from "../../utils/config";
 import {
@@ -73,3 +78,14 @@ export function Admin() {
   );
 }
 export default Admin;
+export async function loader() {
+  const user_resp = await fetch(`${config().baseURL}/user/me`, {
+    credentials: "include",
+  });
+  if (user_resp.status === 401) {
+    throw redirect("/login");
+  }
+
+  const user = await user_resp.json();
+  return { user };
+}

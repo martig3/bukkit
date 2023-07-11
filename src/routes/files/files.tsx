@@ -92,6 +92,7 @@ function Files() {
         )}
       </td>
       <td>{new Date(file.modifiedAt).toLocaleDateString()}</td>
+      <td>{file.createdBy}</td>
       <td>
         <Group className="delete-button">
           {bucket ? (
@@ -118,6 +119,7 @@ function Files() {
           <th></th>
           <th>Size</th>
           <th>Modified</th>
+          <th>Updated By</th>
           <th></th>
         </tr>
       </thead>
@@ -136,7 +138,7 @@ async function deleteFile(
   path: string,
   navigate: any
 ) {
-  const url = `${config().baseURL}/buckets/${bucket}/${path}/${file.name}`;
+  const url = `${config().baseURL}/buckets/${bucket}/${path}${file.name}`;
   const resp = await fetch(url, { method: "DELETE", credentials: "include" });
   if (resp.status === 204) {
     navigate(window.location.pathname);

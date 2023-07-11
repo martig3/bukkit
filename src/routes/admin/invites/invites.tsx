@@ -44,6 +44,7 @@ export function Invites() {
           sx={() => ({
             borderRadius: "0 8px 8px 0",
           })}
+          disabled={input === ""}
           onClick={async () => {
             await putInvite(input.trim());
             setInput("");

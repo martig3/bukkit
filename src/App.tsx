@@ -10,7 +10,7 @@ import Root, { loader as rootLoader } from "./routes/root";
 import Files, { loader as filesLoader } from "./routes/files/files";
 import { Login } from "./routes/login/login";
 import { Notifications } from "@mantine/notifications";
-import Admin from "./routes/admin/admin";
+import Admin, { loader as adminLoader } from "./routes/admin/admin";
 import Invites, {
   loader as invitesLoader,
 } from "./routes/admin/invites/invites";
@@ -41,6 +41,7 @@ function App() {
     {
       path: "admin",
       element: <Admin />,
+      loader: adminLoader,
       children: [
         {
           path: "invites",
