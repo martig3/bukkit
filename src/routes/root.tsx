@@ -144,6 +144,7 @@ function Root() {
           <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
           {breadcrumbs.length > 0 ? <NewFolder /> : <span />}
         </Flex>
+        <FileSearch />
         <Group spacing={"sm"}>
           <UploadFiles />
           <BucketMenu />
