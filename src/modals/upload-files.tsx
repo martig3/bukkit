@@ -34,8 +34,9 @@ function UploadFiles() {
     if (uploads.length === 0) return;
     const file = uploads[0];
     const filename = file.path;
+    const pathname = location.pathname.replace("/buckets/", "/bucket/");
     client
-      .post(`${location.pathname}/${filename}`, file, {
+      .post(`${pathname}/${filename}`, file, {
         onUploadProgress: (progressEvent) => {
           const percent = Math.floor(
             progressEvent.progress ? progressEvent.progress * 100 : 0.01 * 100

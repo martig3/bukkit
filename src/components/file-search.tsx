@@ -30,6 +30,7 @@ export default function FileSearch() {
     <Autocomplete
       icon={<Search />}
       value={search}
+      disabled={!location.pathname.includes("buckets/")}
       onChange={(value) => {
         setDebounce(value);
         setSearch(value);
@@ -38,6 +39,7 @@ export default function FileSearch() {
         const paths = value.path.split("/");
         const folder = paths.slice(0, -1);
         navigate(`/buckets/${folder.join("/")}`);
+        setSearch("");
       }}
       data={data.map((d: any) => ({ value: d.fileName, path: d.fullPath }))}
       placeholder="Search files"

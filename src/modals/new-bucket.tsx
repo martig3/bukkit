@@ -57,8 +57,8 @@ function NewBucket() {
   );
 }
 async function createBucket(name: string) {
-  const url = `${config().baseURL}/admin/bucket/create/${name.trim()}`;
-  const resp = await fetch(url, { method: "POST", credentials: "include" });
+  const url = `${config().baseURL}/buckets/${name.trim()}`;
+  const resp = await fetch(url, { method: "PUT", credentials: "include" });
   return resp.status === 204;
 }
 function errorText(input: string): string | null {

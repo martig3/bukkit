@@ -110,9 +110,6 @@ function Root() {
               <Avatar mx={8} src={"/android-chrome-192x192.png"} />
               <Title order={2}>Mert Bucket</Title>
             </div>
-            {/* <Grid.Col span={4}>
-              <FileSearch />
-            </Grid.Col> */}
             <Group position={"right"}>
               {user.isOwner ? (
                 <NavLink to={"/admin/invites"}>
