@@ -1,10 +1,13 @@
 import { Button, Modal, Stack, TextInput, Text } from "@mantine/core";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Trash } from "tabler-icons-react";
+import { config } from "../utils/config";
+import { notifications } from "@mantine/notifications";
 
 export default function DeleteBucket(props: { opened: boolean; close: any }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const paths = location.pathname.split("/");
   const bucketNameIndex = paths.indexOf("buckets") + 1;
@@ -38,6 +41,17 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
             disabled={name !== bucketName}
             color="red"
             leftIcon={<Trash />}
+            onClick={async () => {
+              const success = await deleteBucket(bucketName);
+              if (!success) {
+                notifications.show({
+                  title: "Error creating bucket",
+                  message: "Could not create bucket, please try again later",
+                });
+                return;
+              }
+              navigate("/");
+            }}
           >
             Confirm Delete
           </Button>
@@ -45,4 +59,9 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
       </Modal>
     </>
   );
+}
+async function deleteBucket(name: string) {
+  const url = `${config().baseURL}/buckets/${name.trim()}`;
+  const resp = await fetch(url, { method: "DELETE", credentials: "include" });
+  return resp.status === 204;
 }
