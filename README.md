@@ -6,6 +6,8 @@ Simple S3-esque filesystem webapp with authentication.
 
 ## Setup
 
+See [mert-bucket-api](https://github.com/martig3/mert-bucket-api)
+
 ### Environment variables
 
 Fill out `.env`
