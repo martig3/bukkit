@@ -1,6 +1,6 @@
 # mert-bucket
 
-Simple & filesystem webapp with authentication.
+Simple S3-esque filesystem webapp with authentication.
 
 ![image](https://github.com/martig3/mert-bucket/assets/32913968/d9f97031-d37d-40e0-9f8a-68a0bd9de116)
 
