@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Modal, TextInput } from "@mantine/core";
 import { useDebouncedState, useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CirclePlus } from "tabler-icons-react";
 import { config } from "../utils/config";
 import { notifications } from "@mantine/notifications";
@@ -63,7 +63,9 @@ export function NewFolder() {
   );
 
   async function createFolder(name: string, bucket: string, path: string) {
-    const url = `${config().baseURL}/buckets/${bucket}/${path}/${name}`;
+    const url = `${config().baseURL}/bucket/${bucket}/${
+      path ? `${path}/` : ""
+    }${name}`;
     const resp = await fetch(url, { method: "POST", credentials: "include" });
     return resp.status === 204;
   }
