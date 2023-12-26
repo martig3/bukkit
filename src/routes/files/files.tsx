@@ -58,30 +58,33 @@ function Files() {
             </Link>
           </div>
         ) : (
-          <Anchor href={downloadUrl(file, bucket ? bucket : "", path)} download>
-            <UnstyledButton
-              sx={(theme) => ({
-                display: "block",
-                width: "fit-content",
-                padding: theme.spacing.xs,
-                borderRadius: theme.radius.sm,
-                color:
+          <UnstyledButton
+            sx={(theme) => ({
+              display: "block",
+              width: "fit-content",
+              padding: theme.spacing.xs,
+              borderRadius: theme.radius.sm,
+              color:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[0]
+                  : theme.black,
+              "&:hover": {
+                backgroundColor:
                   theme.colorScheme === "dark"
-                    ? theme.colors.dark[0]
-                    : theme.black,
-                "&:hover": {
-                  backgroundColor:
-                    theme.colorScheme === "dark"
-                      ? theme.colors.dark[6]
-                      : theme.colors.gray[0],
-                },
-              })}
+                    ? theme.colors.dark[6]
+                    : theme.colors.gray[0],
+              },
+            })}
+          >
+            <Anchor
+              href={downloadUrl(file, bucket ? bucket : "", path)}
+              download
             >
               <Text size="sm" weight={"normal"}>
                 {file.name}
               </Text>
-            </UnstyledButton>
-          </Anchor>
+            </Anchor>
+          </UnstyledButton>
         )}
       </td>
       <td>
