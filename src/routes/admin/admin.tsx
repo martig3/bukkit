@@ -37,7 +37,6 @@ export function Admin() {
         <Header height={70} p="md">
           <Grid
             sx={{ height: "100%" }}
-            px={20}
             align={"center"}
             justify={"space-between"}
           >
@@ -49,7 +48,12 @@ export function Admin() {
                   height: "100%",
                 }}
               >
-                <Avatar mx={8} src={"/android-chrome-192x192.png"} />
+                <Avatar
+                  mx={8}
+                  bg={"orange"}
+                  radius={"xl"}
+                  src={"/android-chrome-192x192.png"}
+                />
                 <Title order={2}>Bukkit</Title>
               </div>
             </Grid.Col>
