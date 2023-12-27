@@ -50,6 +50,7 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
                 });
                 return;
               }
+              props.close();
               navigate("/");
             }}
           >

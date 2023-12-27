@@ -16,9 +16,9 @@ function NewBucket() {
       <ActionIcon size={26} variant={"subtle"}>
         <IconCirclePlus onClick={open} />
       </ActionIcon>
-      <Modal opened={opened} centered onClose={close} title="New Bucket">
+      <Modal opened={opened} centered onClose={close} title="New Bukkit">
         <TextInput
-          placeholder="Bucket name"
+          placeholder="Bukkit name"
           label="Name"
           mb={16}
           error={errorText(nameDebounced)}
@@ -31,12 +31,12 @@ function NewBucket() {
         />
         <Button
           disabled={!minLength(name)}
-          onClick={() => {
+          onClick={async () => {
             const error = errorText(name);
             if (error) {
               return;
             }
-            const success = createBucket(name);
+            const success = await createBucket(name);
             if (!success) {
               notifications.show({
                 title: "Error creating bucket",
@@ -47,7 +47,7 @@ function NewBucket() {
             setName("");
             setNameDebounced("");
             close();
-            navigate(window.location);
+            navigate(`/buckets/${name}`);
           }}
         >
           Add
