@@ -31,16 +31,13 @@ export function Login() {
             />
             <Title order={2}>Bukkit</Title>
           </Flex>
-          <Flex justify={"center"}>
-            <Button
-              leftIcon={<IconBrandDiscord />}
-              onClick={async () => await login()}
-              miw={"fit-content"}
-              maw={"100%"}
-            >
-              Continue with Discord
-            </Button>
-          </Flex>
+          <Button
+            leftIcon={<IconBrandDiscord />}
+            onClick={async () => await login()}
+            w={"100%"}
+          >
+            Continue with Discord
+          </Button>
         </Card>
       </Center>
     </AppShell>
