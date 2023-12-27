@@ -4,7 +4,7 @@ Simple file server webapp with authentication.
 
 ## Setup
 
-See [bukkit-api](https://github.com/martig3/mert-bucket-api)
+See [bukkit-api](https://github.com/martig3/bukkit-api)
 
 ### Environment variables
 
