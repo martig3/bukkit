@@ -39,8 +39,8 @@ function NewBucket() {
             const success = await createBucket(name);
             if (!success) {
               notifications.show({
-                title: "Error creating bucket",
-                message: "Could not create bucket, please try again later",
+                title: "Error creating bukkit",
+                message: "Could not create bukkit, please try again later",
               });
               return;
             }

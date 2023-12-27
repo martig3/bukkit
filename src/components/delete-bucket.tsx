@@ -45,8 +45,8 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
               const success = await deleteBucket(bucketName);
               if (!success) {
                 notifications.show({
-                  title: "Error creating bucket",
-                  message: "Could not create bucket, please try again later",
+                  title: "Error deleting bukkit",
+                  message: "Could not create bukkit, please try again later",
                 });
                 return;
               }
