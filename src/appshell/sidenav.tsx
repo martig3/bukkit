@@ -57,7 +57,7 @@ function Sidenav(props: {
         >
           <Flex justify={"space-between"} gap={8}>
             <IconBucket />
-            <Text weight={"bold"}>Buckets</Text>
+            <Text weight={"bold"}>Bukkits</Text>
             <span style={{ flex: "1 1 auto" }}></span>
             <NewBucket />
           </Flex>
