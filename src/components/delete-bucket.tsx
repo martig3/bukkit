@@ -50,8 +50,9 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
                 });
                 return;
               }
+              setName("");
               props.close();
-              navigate("/");
+              navigate("/", { replace: true });
             }}
           >
             Confirm Delete

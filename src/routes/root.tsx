@@ -25,6 +25,7 @@ import {
   redirect,
   useLoaderData,
   useLocation,
+  useRevalidator,
 } from "react-router-dom";
 import { config } from "../utils/config";
 import UploadFiles from "../modals/upload-files";
@@ -43,7 +44,11 @@ function Root() {
     buckets: string[];
     user: UserInfo;
   };
+  let revalidator = useRevalidator();
   const location = useLocation();
+  useEffect(() => {
+    revalidator.revalidate();
+  }, [location]);
   const genBreadCrumbElements = (location: any) => {
     const paths: string[] = location.pathname.split("/").slice(2);
     return paths.map((item, index, array) => (
