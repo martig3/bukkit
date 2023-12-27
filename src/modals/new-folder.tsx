@@ -2,7 +2,7 @@ import { ActionIcon, Button, Modal, TextInput } from "@mantine/core";
 import { useDebouncedState, useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CirclePlus } from "tabler-icons-react";
+import { IconCirclePlus } from "@tabler/icons-react";
 import { config } from "../utils/config";
 import { notifications } from "@mantine/notifications";
 
@@ -17,7 +17,7 @@ export function NewFolder() {
   return (
     <div>
       <ActionIcon onClick={() => open()}>
-        <CirclePlus size={22}></CirclePlus>
+        <IconCirclePlus size={22}></IconCirclePlus>
       </ActionIcon>
       <Modal opened={opened} centered onClose={close} title="New Folder">
         <TextInput

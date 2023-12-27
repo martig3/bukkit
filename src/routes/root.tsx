@@ -17,13 +17,6 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import {
-  DotsVertical,
-  MoonStars,
-  Search,
-  Settings,
-  Sun,
-} from "tabler-icons-react";
 import Sidenav from "../appshell/sidenav";
 import { useEffect, useState } from "react";
 import {
@@ -32,6 +25,7 @@ import {
   redirect,
   useLoaderData,
   useLocation,
+  useRevalidator,
 } from "react-router-dom";
 import { config } from "../utils/config";
 import UploadFiles from "../modals/upload-files";
@@ -39,9 +33,8 @@ import { NewFolder } from "../modals/new-folder";
 import { UserInfo } from "../model/user-info";
 import FileSearch from "../components/file-search";
 import BucketMenu from "../components/bucket-menu";
-import DeleteBucket from "../components/delete-bucket";
-import { useDisclosure } from "@mantine/hooks";
 import { NavLink } from "react-router-dom";
+import { IconMoonStars, IconSettings, IconSun } from "@tabler/icons-react";
 
 function Root() {
   const theme = useMantineTheme();
@@ -51,7 +44,11 @@ function Root() {
     buckets: string[];
     user: UserInfo;
   };
+  const revalidator = useRevalidator();
   const location = useLocation();
+  useEffect(() => {
+    revalidator.revalidate();
+  }, [location]);
   const genBreadCrumbElements = (location: any) => {
     const paths: string[] = location.pathname.split("/").slice(2);
     return paths.map((item, index, array) => (
@@ -87,7 +84,6 @@ function Root() {
         <Header height={70} p="md">
           <Flex
             sx={{ height: "100%" }}
-            px={20}
             align={"center"}
             justify="space-between"
           >
@@ -107,14 +103,19 @@ function Root() {
                   mr="xl"
                 />
               </MediaQuery>
-              <Avatar mx={8} src={"/android-chrome-192x192.png"} />
-              <Title order={2}>Mert Bucket</Title>
+              <Avatar
+                bg={"orange"}
+                radius={"xl"}
+                mx={8}
+                src={"/android-chrome-192x192.png"}
+              />
+              <Title order={2}>Bukkit</Title>
             </div>
             <Group position={"right"}>
               {user.isOwner ? (
                 <NavLink to={"/admin/invites"}>
                   <ActionIcon>
-                    <Settings />
+                    <IconSettings />
                   </ActionIcon>
                 </NavLink>
               ) : (
@@ -126,9 +127,9 @@ function Root() {
                 size={30}
               >
                 {colorScheme === "dark" ? (
-                  <Sun size={16} />
+                  <IconSun size={16} />
                 ) : (
-                  <MoonStars size={16} />
+                  <IconMoonStars size={16} />
                 )}
               </ActionIcon>
             </Group>
@@ -136,7 +137,7 @@ function Root() {
         </Header>
       }
     >
-      <Group position={"apart"}>
+      <Group position={"apart"} mb={16}>
         <Flex direction={"row"} gap={8} align={"center"}>
           <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
           {breadcrumbs.length > 0 ? <NewFolder /> : <span />}

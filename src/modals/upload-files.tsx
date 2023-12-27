@@ -10,7 +10,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { Dropzone, FileWithPath } from "@mantine/dropzone";
-import { FileUpload, Upload, X } from "tabler-icons-react";
+import { IconFileUpload, IconUpload, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { config } from "../utils/config";
@@ -79,7 +79,7 @@ function UploadFiles() {
           uploads.length > 0 ? (
             <Loader size="sm" color="white" />
           ) : (
-            <FileUpload />
+            <IconFileUpload />
           )
         }
       >
@@ -101,7 +101,7 @@ function UploadFiles() {
             style={{ minHeight: 100, pointerEvents: "none" }}
           >
             <Dropzone.Accept>
-              <Upload
+              <IconUpload
                 size={50}
                 color={
                   theme.colors[theme.primaryColor][
@@ -111,13 +111,13 @@ function UploadFiles() {
               />
             </Dropzone.Accept>
             <Dropzone.Reject>
-              <X
+              <IconX
                 size={50}
                 color={theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]}
               />
             </Dropzone.Reject>
             <Dropzone.Idle>
-              <FileUpload size={50} />
+              <IconFileUpload size={50} />
             </Dropzone.Idle>
 
             <Group position={"center"}>

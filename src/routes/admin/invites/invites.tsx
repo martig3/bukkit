@@ -17,7 +17,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useState } from "react";
-import { Plus, Trash } from "tabler-icons-react";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 export function Invites() {
   const { invites } = useLoaderData() as { invites: UserInvite[] };
@@ -40,7 +40,7 @@ export function Invites() {
           radius={"xs"}
         />
         <Button
-          rightIcon={<Plus />}
+          rightIcon={<IconPlus />}
           sx={() => ({
             borderRadius: "0 8px 8px 0",
           })}
@@ -66,7 +66,7 @@ export function Invites() {
                   navigate(location.pathname);
                 }}
               >
-                <Trash />
+                <IconTrash />
               </ActionIcon>
             </Group>
           </Card>

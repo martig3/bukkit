@@ -5,7 +5,7 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { useState } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Root, { loader as rootLoader } from "./routes/root";
 import Files, { loader as filesLoader } from "./routes/files/files";
 import { Login } from "./routes/login/login";
@@ -15,6 +15,7 @@ import Invites, {
   loader as invitesLoader,
 } from "./routes/admin/invites/invites";
 import NoInvite from "./routes/errors/no-invite";
+import Auth from "./routes/errors/auth";
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
@@ -51,8 +52,22 @@ function App() {
       ],
     },
     {
-      path: "no-invite",
-      element: <NoInvite />,
+      path: "errors",
+      element: (
+        <>
+          <Outlet />
+        </>
+      ),
+      children: [
+        {
+          path: "no-invite",
+          element: <NoInvite />,
+        },
+        {
+          path: "auth",
+          element: <Auth />,
+        },
+      ],
     },
   ]);
 

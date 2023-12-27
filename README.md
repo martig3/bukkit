@@ -1,16 +1,14 @@
-# mert-bucket
+# bukkit
 
-Simple S3-esque filesystem webapp with authentication.
-
-![image](https://github.com/martig3/mert-bucket/assets/32913968/d9f97031-d37d-40e0-9f8a-68a0bd9de116)
+Simple file server webapp with authentication.
 
 ## Setup
 
-See [mert-bucket-api](https://github.com/martig3/mert-bucket-api)
+See [bukkit-api](https://github.com/martig3/bukkit-api)
 
 ### Environment variables
 
-Fill out `.env`
+Fill out `.env.example`
 
 ### Install dependencies
 

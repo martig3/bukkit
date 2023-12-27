@@ -4,7 +4,7 @@ import { useDebouncedState, useDisclosure } from "@mantine/hooks";
 import { config } from "../utils/config";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import { CirclePlus } from "tabler-icons-react";
+import { IconCirclePlus } from "@tabler/icons-react";
 
 function NewBucket() {
   const navigate = useNavigate();
@@ -14,11 +14,11 @@ function NewBucket() {
   return (
     <div>
       <ActionIcon size={26} variant={"subtle"}>
-        <CirclePlus onClick={open} />
+        <IconCirclePlus onClick={open} />
       </ActionIcon>
-      <Modal opened={opened} centered onClose={close} title="New Bucket">
+      <Modal opened={opened} centered onClose={close} title="New Bukkit">
         <TextInput
-          placeholder="Bucket name"
+          placeholder="Bukkit name"
           label="Name"
           mb={16}
           error={errorText(nameDebounced)}
@@ -31,23 +31,23 @@ function NewBucket() {
         />
         <Button
           disabled={!minLength(name)}
-          onClick={() => {
+          onClick={async () => {
             const error = errorText(name);
             if (error) {
               return;
             }
-            const success = createBucket(name);
+            const success = await createBucket(name);
             if (!success) {
               notifications.show({
-                title: "Error creating bucket",
-                message: "Could not create bucket, please try again later",
+                title: "Error creating bukkit",
+                message: "Could not create bukkit, please try again later",
               });
               return;
             }
             setName("");
             setNameDebounced("");
             close();
-            navigate(window.location);
+            navigate(`/buckets/${name}`);
           }}
         >
           Add

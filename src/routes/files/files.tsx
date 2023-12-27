@@ -6,7 +6,7 @@ import {
   Text,
   UnstyledButton,
 } from "@mantine/core";
-import { FileX, Folder, LineDashed } from "tabler-icons-react";
+import { IconFileX, IconFolder, IconLineDashed } from "@tabler/icons-react";
 import { formatFileSize } from "../../utils/file-size";
 import {
   Link,
@@ -51,7 +51,7 @@ function Files() {
                 })}
               >
                 <Group spacing={4}>
-                  <Folder />
+                  <IconFolder />
                   <Text size="sm">{file.name}</Text>
                 </Group>
               </UnstyledButton>
@@ -88,11 +88,11 @@ function Files() {
         {file.size && !file.isDirectory ? (
           formatFileSize(file.size)
         ) : (
-          <LineDashed />
+          <IconLineDashed />
         )}
       </td>
       <td>{new Date(file.modifiedAt).toLocaleDateString()}</td>
-      <td>{file.createdBy !== "" ? file.createdBy : <LineDashed />}</td>
+      <td>{file.createdBy !== "" ? file.createdBy : <IconLineDashed />}</td>
       <td>
         <Group className="delete-button">
           {bucket ? (
@@ -102,7 +102,7 @@ function Files() {
               variant={"filled"}
               onClick={() => deleteFile(file, bucket, path, navigate)}
             >
-              <FileX size={18} color={"red"} />
+              <IconFileX size={18} color={"red"} />
             </ActionIcon>
           ) : (
             ""
