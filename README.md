@@ -12,8 +12,8 @@ Fill out `.env.example`
 
 ### Install dependencies
 
-`npm install`
+`pnpm install`
 
 ## Run
 
-`npm run dev`
+`pnpm run dev`
