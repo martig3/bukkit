@@ -98,7 +98,12 @@ function Root() {
                   mr="xl"
                 />
               </MediaQuery>
-              <Avatar mx={8} src={"/android-chrome-192x192.png"} />
+              <Avatar
+                bg={"orange"}
+                radius={"xl"}
+                mx={8}
+                src={"/android-chrome-192x192.png"}
+              />
               <Title order={2}>Bukkit</Title>
             </div>
             <Group position={"right"}>
