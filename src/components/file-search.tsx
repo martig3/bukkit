@@ -1,9 +1,9 @@
 import { Autocomplete, Input } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { Search } from "tabler-icons-react";
 import { config } from "../utils/config";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDebouncedState } from "@mantine/hooks";
+import { IconSearch } from "@tabler/icons-react";
 
 export default function FileSearch() {
   const location = useLocation();
@@ -28,7 +28,7 @@ export default function FileSearch() {
   }, [debounce]);
   return (
     <Autocomplete
-      icon={<Search />}
+      icon={<IconSearch />}
       value={search}
       disabled={!location.pathname.includes("buckets/")}
       onChange={(value) => {

@@ -1,6 +1,6 @@
 import { AppShell, Button, Card, Center, Flex } from "@mantine/core";
-import { BrandDiscord } from "tabler-icons-react";
 import { config } from "../../utils/config";
+import { IconBrandDiscord } from "@tabler/icons-react";
 export function Login() {
   const login = async () => {
     window.location.href = `${config().baseURL}/auth/login`;
@@ -16,7 +16,7 @@ export function Login() {
           <h1>Login</h1>
           <Flex justify={"center"}>
             <Button
-              leftIcon={<BrandDiscord />}
+              leftIcon={<IconBrandDiscord />}
               onClick={async () => await login()}
               w={"100%"}
             >

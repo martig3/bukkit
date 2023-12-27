@@ -1,9 +1,9 @@
 import { Button, Modal, Stack, TextInput, Text } from "@mantine/core";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Trash } from "tabler-icons-react";
 import { config } from "../utils/config";
 import { notifications } from "@mantine/notifications";
+import { IconTrash } from "@tabler/icons-react";
 
 export default function DeleteBucket(props: { opened: boolean; close: any }) {
   const location = useLocation();
@@ -40,7 +40,7 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
           <Button
             disabled={name !== bucketName}
             color="red"
-            leftIcon={<Trash />}
+            leftIcon={<IconTrash />}
             onClick={async () => {
               const success = await deleteBucket(bucketName);
               if (!success) {

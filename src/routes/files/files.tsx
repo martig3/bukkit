@@ -6,7 +6,7 @@ import {
   Text,
   UnstyledButton,
 } from "@mantine/core";
-import { FileX, Folder, LineDashed } from "tabler-icons-react";
+import { IconFileX, IconFolder, IconLineDashed } from "@tabler/icons-react";
 import { formatFileSize } from "../../utils/file-size";
 import {
   Link,
@@ -51,51 +51,48 @@ function Files() {
                 })}
               >
                 <Group spacing={4}>
-                  <Folder />
+                  <IconFolder />
                   <Text size="sm">{file.name}</Text>
                 </Group>
               </UnstyledButton>
             </Link>
           </div>
         ) : (
-          <UnstyledButton
-            sx={(theme) => ({
-              display: "block",
-              width: "fit-content",
-              padding: theme.spacing.xs,
-              borderRadius: theme.radius.sm,
-              color:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[0]
-                  : theme.black,
-              "&:hover": {
-                backgroundColor:
+          <Anchor href={downloadUrl(file, bucket ? bucket : "", path)} download>
+            <UnstyledButton
+              sx={(theme) => ({
+                display: "block",
+                width: "fit-content",
+                padding: theme.spacing.xs,
+                borderRadius: theme.radius.sm,
+                color:
                   theme.colorScheme === "dark"
-                    ? theme.colors.dark[6]
-                    : theme.colors.gray[0],
-              },
-            })}
-          >
-            <Anchor
-              href={downloadUrl(file, bucket ? bucket : "", path)}
-              download
+                    ? theme.colors.dark[0]
+                    : theme.black,
+                "&:hover": {
+                  backgroundColor:
+                    theme.colorScheme === "dark"
+                      ? theme.colors.dark[6]
+                      : theme.colors.gray[0],
+                },
+              })}
             >
               <Text size="sm" weight={"normal"}>
                 {file.name}
               </Text>
-            </Anchor>
-          </UnstyledButton>
+            </UnstyledButton>
+          </Anchor>
         )}
       </td>
       <td>
         {file.size && !file.isDirectory ? (
           formatFileSize(file.size)
         ) : (
-          <LineDashed />
+          <IconLineDashed />
         )}
       </td>
       <td>{new Date(file.modifiedAt).toLocaleDateString()}</td>
-      <td>{file.createdBy !== "" ? file.createdBy : <LineDashed />}</td>
+      <td>{file.createdBy !== "" ? file.createdBy : <IconLineDashed />}</td>
       <td>
         <Group className="delete-button">
           {bucket ? (
@@ -105,7 +102,7 @@ function Files() {
               variant={"filled"}
               onClick={() => deleteFile(file, bucket, path, navigate)}
             >
-              <FileX size={18} color={"red"} />
+              <IconFileX size={18} color={"red"} />
             </ActionIcon>
           ) : (
             ""

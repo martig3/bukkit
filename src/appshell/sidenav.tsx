@@ -11,7 +11,12 @@ import {
   UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
-import { Bucket, ChevronLeft, ChevronRight, Logout } from "tabler-icons-react";
+import {
+  IconBucket,
+  IconChevronLeft,
+  IconChevronRight,
+  IconLogout,
+} from "@tabler/icons-react";
 import NewBucket from "../modals/new-bucket";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { config } from "../utils/config";
@@ -50,8 +55,8 @@ function Sidenav(props: {
             }`,
           }}
         >
-          <Flex justify={"space-between"}>
-            <Bucket />
+          <Flex justify={"space-between"} gap={8}>
+            <IconBucket />
             <Text weight={"bold"}>Buckets</Text>
             <span style={{ flex: "1 1 auto" }}></span>
             <NewBucket />
@@ -121,16 +126,16 @@ function Sidenav(props: {
                     </Text>
                   </Box>
                   {theme.dir === "ltr" ? (
-                    <ChevronRight size={18} />
+                    <IconChevronRight size={18} />
                   ) : (
-                    <ChevronLeft size={18} />
+                    <IconChevronLeft size={18} />
                   )}
                 </Group>
               </UnstyledButton>
             </Box>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item icon={<Logout />} onClick={async () => logout()}>
+            <Menu.Item icon={<IconLogout />} onClick={async () => logout()}>
               Logout
             </Menu.Item>
           </Menu.Dropdown>

@@ -4,7 +4,7 @@ import { useDebouncedState, useDisclosure } from "@mantine/hooks";
 import { config } from "../utils/config";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import { CirclePlus } from "tabler-icons-react";
+import { IconCirclePlus } from "@tabler/icons-react";
 
 function NewBucket() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function NewBucket() {
   return (
     <div>
       <ActionIcon size={26} variant={"subtle"}>
-        <CirclePlus onClick={open} />
+        <IconCirclePlus onClick={open} />
       </ActionIcon>
       <Modal opened={opened} centered onClose={close} title="New Bucket">
         <TextInput
