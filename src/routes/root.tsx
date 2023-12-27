@@ -44,7 +44,7 @@ function Root() {
     buckets: string[];
     user: UserInfo;
   };
-  let revalidator = useRevalidator();
+  const revalidator = useRevalidator();
   const location = useLocation();
   useEffect(() => {
     revalidator.revalidate();
