@@ -24,6 +24,14 @@ function UploadFiles() {
   const [progress, setProgress] = useState<number>(0);
   const [uploadOpened, { close, open }] = useDisclosure(false);
   const navigate = useNavigate();
+  const onUploadError = () => {
+    const uploaded = progressQueue();
+    notifications.show({
+      title: "Error Uploading File",
+      message: `Failed to upload ${uploaded?.name}, please try again later.`,
+      color: "red",
+    });
+  };
   const progressQueue = () => {
     const updated = [...uploads];
     const uploaded = updated.shift();
@@ -38,8 +46,8 @@ function UploadFiles() {
       const filename = file.path;
       const pathname = location.pathname.replace("/buckets/", "/bucket/");
       const url = `${config().baseURL}${pathname}/${filename}`;
-      const chunkSize = 2_000_000;
-      const totalParts = Math.max(1, Math.round(file.size / chunkSize));
+      const chunkSize = 50_000_000;
+      const totalParts = Math.ceil(file.size / chunkSize);
       let part = 1;
       for (let start = 0; start < file.size; start += chunkSize) {
         const chunk = file.slice(start, start + chunkSize);
@@ -50,21 +58,20 @@ function UploadFiles() {
           ["total_parts", totalParts.toString()],
         ]);
         try {
-          await fetch(`${url}?${query.toString()}`, {
+          let resp = await fetch(`${url}?${query.toString()}`, {
             method: "post",
             body: formData,
             credentials: "include",
           });
+          if (resp.status > 400) {
+            onUploadError();
+            return;
+          }
           part++;
           setProgress((part / totalParts) * 100);
         } catch (error) {
-          const uploaded = progressQueue();
-          notifications.show({
-            title: "Error Uploading File",
-            message: `Failed to upload ${uploaded?.name}, please try again later.`,
-            color: "red",
-          });
-          break;
+          onUploadError();
+          return;
         }
       }
       const uploaded = progressQueue();
