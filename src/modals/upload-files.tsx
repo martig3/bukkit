@@ -21,28 +21,29 @@ function UploadFiles() {
   const theme = useMantineTheme();
   const location = useLocation();
   const [uploads, setUploads] = useState<FileWithPath[]>([]);
+  const [uploading, setUploading] = useState<FileWithPath>();
   const [progress, setProgress] = useState<number>(0);
   const [uploadOpened, { close, open }] = useDisclosure(false);
   const navigate = useNavigate();
   const onUploadError = () => {
-    const uploaded = progressQueue();
     notifications.show({
       title: "Error Uploading File",
-      message: `Failed to upload ${uploaded?.name}, please try again later.`,
+      message: `Failed to upload ${uploading?.name}, please try again later.`,
       color: "red",
     });
+    setUploading(undefined);
   };
   const progressQueue = () => {
-    const updated = [...uploads];
-    const uploaded = updated.shift();
+    console.log(uploads);
+    const next = uploads[0];
+    setUploading(next);
+    setUploads(uploads.slice(1));
     setProgress(0);
-    setUploads(updated);
-    return uploaded;
   };
   useEffect(() => {
     const upload = async () => {
-      if (uploads.length === 0) return;
-      const file = uploads[0];
+      if (!uploading) return;
+      const file = uploading;
       const filename = file.path;
       const pathname = location.pathname.replace("/buckets/", "/bucket/");
       const url = `${config().baseURL}${pathname}/${filename}`;
@@ -73,18 +74,31 @@ function UploadFiles() {
           return;
         }
       }
-      const uploaded = progressQueue();
       notifications.show({
         title: "File Uploaded",
-        message: `Uploaded ${uploaded?.name} successfully`,
+        message: `Uploaded ${uploading?.name} successfully`,
         color: "green",
       });
+      setUploading(undefined);
     };
-
     upload();
-  }, [uploads]);
+  }, [uploading]);
+
+  useEffect(() => {
+    if (uploading) {
+      return;
+    }
+    progressQueue();
+  }, [uploading]);
 
   function uploadFiles(files: FileWithPath[]) {
+    if (uploads.length === 0 && files.length > 0 && !uploading) {
+      setUploading(files[0]);
+      if (files.length > 1) {
+        setUploads([...files.slice(1)]);
+      }
+      return;
+    }
     setUploads([...uploads, ...files]);
   }
 
@@ -148,19 +162,22 @@ function UploadFiles() {
             </Group>
           </Group>
         </Dropzone>
-        {uploads.length > 0 ? (
-          <Paper shadow="xs" radius="md" p="md" mt={24}>
-            {uploads.map((u, i) => (
-              <div key={i}>
-                <Text>{u.path}</Text>
-                <Progress value={i === 0 ? progress : 0} animate />
-                <Divider my="sm" />
-              </div>
-            ))}
+        <div>{uploads.length}</div>
+        {uploading ? (
+          <Paper radius="md" mt={"md"}>
+            <Text>{uploading.name}</Text>
+            <Progress value={progress} animate />
+            <Divider my="sm" />
           </Paper>
         ) : (
           <></>
         )}
+        {uploads.map((u, i) => (
+          <Paper radius="md" key={i}>
+            <Text>{u.path}</Text>
+            <Divider my="sm" />
+          </Paper>
+        ))}
       </Modal>
     </div>
   );
