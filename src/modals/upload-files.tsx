@@ -24,7 +24,13 @@ function UploadFiles() {
   const [progress, setProgress] = useState<number>(0);
   const [uploadOpened, { close, open }] = useDisclosure(false);
   const navigate = useNavigate();
-
+  const progressQueue = () => {
+    const updated = [...uploads];
+    const uploaded = updated.shift();
+    setProgress(0);
+    setUploads(updated);
+    return uploaded;
+  };
   useEffect(() => {
     const upload = async () => {
       if (uploads.length === 0) return;
@@ -52,10 +58,7 @@ function UploadFiles() {
           part++;
           setProgress((part / totalParts) * 100);
         } catch (error) {
-          const updated = [...uploads];
-          const uploaded = updated.shift();
-          setUploads(updated);
-          setProgress(0);
+          const uploaded = progressQueue();
           notifications.show({
             title: "Error Uploading File",
             message: `Failed to upload ${uploaded?.name}, please try again later.`,
@@ -64,10 +67,7 @@ function UploadFiles() {
           break;
         }
       }
-      const updated = [...uploads];
-      const uploaded = updated.shift();
-      setProgress(0);
-      setUploads(updated);
+      const uploaded = progressQueue();
       notifications.show({
         title: "File Uploaded",
         message: `Uploaded ${uploaded?.name} successfully`,
