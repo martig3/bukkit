@@ -92,7 +92,7 @@ function Files() {
         )}
       </td>
       <td>{new Date(file.modifiedAt).toLocaleDateString()}</td>
-      <td>{file.createdBy !== "" ? file.createdBy : <IconLineDashed />}</td>
+      <td>{file.updatedBy !== "" ? file.updatedBy : <IconLineDashed />}</td>
       <td>
         <Group className="delete-button">
           {bucket ? (

@@ -31,39 +31,56 @@ function UploadFiles() {
   });
 
   useEffect(() => {
-    if (uploads.length === 0) return;
-    const file = uploads[0];
-    const filename = file.path;
-    const pathname = location.pathname.replace("/buckets/", "/bucket/");
-    client
-      .post(`${pathname}/${filename}`, file, {
-        onUploadProgress: (progressEvent) => {
-          const percent = Math.floor(
-            progressEvent.progress ? progressEvent.progress * 100 : 0.01 * 100
-          );
-          setProgress(percent);
-        },
-      })
-      .then(() => {
-        const updated = [...uploads];
-        const uploaded = updated.shift();
-        setUploads(updated);
-        notifications.show({
-          title: "File Uploaded",
-          message: `Uploaded ${uploaded?.name} successfully`,
-          color: "green",
-        });
-      })
-      .catch(() => {
-        const updated = [...uploads];
-        const uploaded = updated.shift();
-        setUploads(updated);
-        notifications.show({
-          title: "Error Uploading File",
-          message: `Failed to upload ${uploaded?.name}, please try again later.`,
-          color: "red",
-        });
+    const upload = async () => {
+      if (uploads.length === 0) return;
+      const file = uploads[0];
+      const filename = file.path;
+      const pathname = location.pathname.replace("/buckets/", "/bucket/");
+      const url = `${config().baseURL}${pathname}/${filename}`;
+      const chunkSize = 2_000_000;
+      const totalParts = Math.max(1, Math.round(file.size / chunkSize));
+      let part = 1;
+      for (let start = 0; start < file.size; start += chunkSize) {
+        const chunk = file.slice(start, start + chunkSize);
+        const formData = new FormData();
+        formData.set("data", chunk);
+        const query = new URLSearchParams([
+          ["part", part.toString()],
+          ["total_parts", totalParts.toString()],
+        ]);
+        try {
+          await fetch(`${url}?${query.toString()}`, {
+            method: "post",
+            body: formData,
+            credentials: "include",
+          });
+          part++;
+          setProgress((part / totalParts) * 100);
+        } catch (error) {
+          const updated = [...uploads];
+          const uploaded = updated.shift();
+          setUploads(updated);
+          setProgress(0);
+          notifications.show({
+            title: "Error Uploading File",
+            message: `Failed to upload ${uploaded?.name}, please try again later.`,
+            color: "red",
+          });
+          break;
+        }
+      }
+      const updated = [...uploads];
+      const uploaded = updated.shift();
+      setProgress(0);
+      setUploads(updated);
+      notifications.show({
+        title: "File Uploaded",
+        message: `Uploaded ${uploaded?.name} successfully`,
+        color: "green",
       });
+    };
+
+    upload();
   }, [uploads]);
 
   function uploadFiles(files: FileWithPath[]) {

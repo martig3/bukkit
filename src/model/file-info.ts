@@ -3,5 +3,5 @@ export type FileInfo = {
   isDirectory: boolean;
   size: number;
   modifiedAt: string;
-  createdBy?: string;
+  updatedBy: string;
 };
