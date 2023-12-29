@@ -87,7 +87,6 @@ function errorText(input: string, invites: UserInvite[]): string | null {
 export default Invites;
 async function deleteInvite(invite: UserInvite): Promise<void> {
   await fetch(`${config().baseURL}/admin/invites`, {
-    credentials: "include",
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -97,7 +96,6 @@ async function deleteInvite(invite: UserInvite): Promise<void> {
 }
 async function putInvite(email: string): Promise<UserInvite> {
   const resp = await fetch(`${config().baseURL}/admin/invites`, {
-    credentials: "include",
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -110,9 +108,7 @@ async function putInvite(email: string): Promise<UserInvite> {
   return await resp.json();
 }
 async function getInvites(): Promise<[UserInvite]> {
-  const resp = await fetch(`${config().baseURL}/admin/invites`, {
-    credentials: "include",
-  });
+  const resp = await fetch(`${config().baseURL}/admin/invites`);
   return await resp.json();
 }
 

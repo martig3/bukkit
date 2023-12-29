@@ -11,7 +11,6 @@ import {
 } from "@mantine/core";
 import { Dropzone, FileWithPath } from "@mantine/dropzone";
 import { IconFileUpload, IconUpload, IconX } from "@tabler/icons-react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { config } from "../utils/config";
 import { useDisclosure } from "@mantine/hooks";
@@ -25,45 +24,64 @@ function UploadFiles() {
   const [progress, setProgress] = useState<number>(0);
   const [uploadOpened, { close, open }] = useDisclosure(false);
   const navigate = useNavigate();
-  const client = axios.create({
-    baseURL: config().baseURL,
-    withCredentials: true,
-  });
-
+  const onUploadError = () => {
+    const uploaded = progressQueue();
+    notifications.show({
+      title: "Error Uploading File",
+      message: `Failed to upload ${uploaded?.name}, please try again later.`,
+      color: "red",
+    });
+  };
+  const progressQueue = () => {
+    const updated = [...uploads];
+    const uploaded = updated.shift();
+    setProgress(0);
+    setUploads(updated);
+    return uploaded;
+  };
   useEffect(() => {
-    if (uploads.length === 0) return;
-    const file = uploads[0];
-    const filename = file.path;
-    const pathname = location.pathname.replace("/buckets/", "/bucket/");
-    client
-      .post(`${pathname}/${filename}`, file, {
-        onUploadProgress: (progressEvent) => {
-          const percent = Math.floor(
-            progressEvent.progress ? progressEvent.progress * 100 : 0.01 * 100
-          );
-          setProgress(percent);
-        },
-      })
-      .then(() => {
-        const updated = [...uploads];
-        const uploaded = updated.shift();
-        setUploads(updated);
-        notifications.show({
-          title: "File Uploaded",
-          message: `Uploaded ${uploaded?.name} successfully`,
-          color: "green",
-        });
-      })
-      .catch(() => {
-        const updated = [...uploads];
-        const uploaded = updated.shift();
-        setUploads(updated);
-        notifications.show({
-          title: "Error Uploading File",
-          message: `Failed to upload ${uploaded?.name}, please try again later.`,
-          color: "red",
-        });
+    const upload = async () => {
+      if (uploads.length === 0) return;
+      const file = uploads[0];
+      const filename = file.path;
+      const pathname = location.pathname.replace("/buckets/", "/bucket/");
+      const url = `${config().baseURL}${pathname}/${filename}`;
+      const chunkSize = 50_000_000;
+      const totalParts = Math.ceil(file.size / chunkSize);
+      let part = 1;
+      for (let start = 0; start < file.size; start += chunkSize) {
+        const chunk = file.slice(start, start + chunkSize);
+        const formData = new FormData();
+        formData.set("data", chunk);
+        const query = new URLSearchParams([
+          ["part", part.toString()],
+          ["total_parts", totalParts.toString()],
+        ]);
+        try {
+          let resp = await fetch(`${url}?${query.toString()}`, {
+            method: "post",
+            body: formData,
+          });
+          if (resp.status > 400) {
+            onUploadError();
+            return;
+          }
+          part++;
+          setProgress((part / totalParts) * 100);
+        } catch (error) {
+          onUploadError();
+          return;
+        }
+      }
+      const uploaded = progressQueue();
+      notifications.show({
+        title: "File Uploaded",
+        message: `Uploaded ${uploaded?.name} successfully`,
+        color: "green",
       });
+    };
+
+    upload();
   }, [uploads]);
 
   function uploadFiles(files: FileWithPath[]) {

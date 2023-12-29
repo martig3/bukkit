@@ -92,7 +92,7 @@ function Files() {
         )}
       </td>
       <td>{new Date(file.modifiedAt).toLocaleDateString()}</td>
-      <td>{file.createdBy !== "" ? file.createdBy : <IconLineDashed />}</td>
+      <td>{file.updatedBy !== "" ? file.updatedBy : <IconLineDashed />}</td>
       <td>
         <Group className="delete-button">
           {bucket ? (
@@ -141,16 +141,14 @@ async function deleteFile(
   navigate: any
 ) {
   const url = `${config().baseURL}/bucket/${bucket}/${path}/${file.name}`;
-  const resp = await fetch(url, { method: "DELETE", credentials: "include" });
+  const resp = await fetch(url, { method: "DELETE" });
   if (resp.status === 204) {
     navigate(window.location.pathname);
   }
 }
 
 async function getFiles(bucket: string, path: string): Promise<FileInfo[]> {
-  const resp = await fetch(`${config().baseURL}/bucket/${bucket}/${path}`, {
-    credentials: "include",
-  });
+  const resp = await fetch(`${config().baseURL}/bucket/${bucket}/${path}`);
   return await resp.json();
 }
 

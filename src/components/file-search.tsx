@@ -18,8 +18,7 @@ export default function FileSearch() {
         return;
       }
       const req = await fetch(
-        `${config().baseURL}/buckets/${bucketName}/search?search=${search}`,
-        { credentials: "include" }
+        `${config().baseURL}/buckets/${bucketName}/search?search=${search}`
       );
       const files = await req.json();
       setData(files);
@@ -37,7 +36,7 @@ export default function FileSearch() {
       }}
       onItemSubmit={(value: { value: string; path: string }) => {
         const paths = value.path.split("/");
-        const folder = paths.slice(0, -1);
+        const folder = paths.slice(-2, -1);
         navigate(`/buckets/${folder.join("/")}`);
         setSearch("");
       }}

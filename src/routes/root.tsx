@@ -156,15 +156,8 @@ function Root() {
 export default Root;
 
 export async function loader() {
-  const user_resp = await fetch(`${config().baseURL}/user/me`, {
-    credentials: "include",
-  });
-  if (user_resp.status === 401) {
-    throw redirect("/login");
-  }
-  const resp = await fetch(`${config().baseURL}/buckets`, {
-    credentials: "include",
-  });
+  const user_resp = await fetch(`${config().baseURL}/user/me`);
+  const resp = await fetch(`${config().baseURL}/buckets`);
   const buckets = await resp.json();
   const user = await user_resp.json();
   return { buckets, user };
