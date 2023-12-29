@@ -162,7 +162,6 @@ function UploadFiles() {
             </Group>
           </Group>
         </Dropzone>
-        <div>{uploads.length}</div>
         {uploading ? (
           <Paper radius="md" mt={"md"}>
             <Text>{uploading.name}</Text>
