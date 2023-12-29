@@ -11,7 +11,6 @@ import {
 } from "@mantine/core";
 import { Dropzone, FileWithPath } from "@mantine/dropzone";
 import { IconFileUpload, IconUpload, IconX } from "@tabler/icons-react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { config } from "../utils/config";
 import { useDisclosure } from "@mantine/hooks";
@@ -25,10 +24,6 @@ function UploadFiles() {
   const [progress, setProgress] = useState<number>(0);
   const [uploadOpened, { close, open }] = useDisclosure(false);
   const navigate = useNavigate();
-  const client = axios.create({
-    baseURL: config().baseURL,
-    withCredentials: true,
-  });
 
   useEffect(() => {
     const upload = async () => {
