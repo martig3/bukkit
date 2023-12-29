@@ -61,7 +61,6 @@ function UploadFiles() {
           let resp = await fetch(`${url}?${query.toString()}`, {
             method: "post",
             body: formData,
-            credentials: "include",
           });
           if (resp.status > 400) {
             onUploadError();

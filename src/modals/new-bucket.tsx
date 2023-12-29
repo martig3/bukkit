@@ -58,7 +58,7 @@ function NewBucket() {
 }
 async function createBucket(name: string) {
   const url = `${config().baseURL}/buckets/${name.trim()}`;
-  const resp = await fetch(url, { method: "PUT", credentials: "include" });
+  const resp = await fetch(url, { method: "PUT" });
   return resp.status === 204;
 }
 function errorText(input: string): string | null {

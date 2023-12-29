@@ -64,6 +64,6 @@ export default function DeleteBucket(props: { opened: boolean; close: any }) {
 }
 async function deleteBucket(name: string) {
   const url = `${config().baseURL}/buckets/${name.trim()}`;
-  const resp = await fetch(url, { method: "DELETE", credentials: "include" });
+  const resp = await fetch(url, { method: "DELETE" });
   return resp.status === 204;
 }

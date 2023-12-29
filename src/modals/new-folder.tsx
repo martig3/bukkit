@@ -66,7 +66,7 @@ export function NewFolder() {
     const url = `${config().baseURL}/bucket/${bucket}/${
       path ? `${path}/` : ""
     }${name}`;
-    const resp = await fetch(url, { method: "POST", credentials: "include" });
+    const resp = await fetch(url, { method: "POST" });
     return resp.status === 204;
   }
 

@@ -83,9 +83,7 @@ export function Admin() {
 }
 export default Admin;
 export async function loader() {
-  const user_resp = await fetch(`${config().baseURL}/user/me`, {
-    credentials: "include",
-  });
+  const user_resp = await fetch(`${config().baseURL}/user/me`);
   if (user_resp.status === 401) {
     throw redirect("/login");
   }

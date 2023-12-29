@@ -18,8 +18,7 @@ export default function FileSearch() {
         return;
       }
       const req = await fetch(
-        `${config().baseURL}/buckets/${bucketName}/search?search=${search}`,
-        { credentials: "include" }
+        `${config().baseURL}/buckets/${bucketName}/search?search=${search}`
       );
       const files = await req.json();
       setData(files);

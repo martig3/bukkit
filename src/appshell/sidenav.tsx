@@ -32,7 +32,7 @@ function Sidenav(props: {
   const theme = useMantineTheme();
   const { bucket } = useParams();
   const logout = async () => {
-    await fetch(`${config().baseURL}/auth/logout`, { credentials: "include" });
+    await fetch(`${config().baseURL}/auth/logout`);
     navigate("/login");
   };
 
